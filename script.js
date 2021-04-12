@@ -33,11 +33,17 @@ function resize() {
     w = canvas.width = window.innerWidth;
     h = canvas.height = window.innerHeight;
 }
+class Particle{
+    constructor(){
+
+    }
+}
 let mousePos;  
 let mousePosPrev;
 let mousePosMM
 let mouseIsPressed=false;
-let emojis = "qmc20tqx9,30";//😀😁😉😍😛🤨😬😎🤓";
+let emojis = "qmc20tqx9,30";//☎️😀😁😉😍😛🤨😬😎🤓";
+let smth;
 function draw(e) {
     // var dt = e-time_old;
     // time_old = e;
@@ -49,13 +55,13 @@ function draw(e) {
         ctx.translate(mousePos.x, mousePos.y);
         ctx.rotate(Math.random()*6.28);
         ctx.textAlign = "center";
-        ctx.font = 128*Math.random()+'px monospace';
+        ctx.font = 55*Math.random()+'px monospace';
         var emoji = emojis.charAt(Math.floor(Math.random()*emojis.length));
-        if(Math.random()>.5){
-            ctx.fillText("😬",0, 0);
+        if(smth>.5){
+            ctx.fillText("☎️",0, 0);
         }
         else{
-            ctx.fillText("😍",0, 0);
+            ctx.fillText("🔋",0, 0);
 
         }
         ctx.restore();
@@ -74,9 +80,17 @@ canvas.onmousemove = function(e){
 canvas.onmousedown = function(e){
     mouseIsPressed=true;
     show_tip=false;
+    smth = Math.random();
 }
 canvas.onmouseup = function(e){
     mouseIsPressed = false;
+}
+canvas.touchstart  = function(e){
+    mouseIsPressed=true;
+    smth = Math.random();
+}
+canvas.touchend = function(e){
+    mouseIsPressed=true;
 }
 setup();
 draw(1);
