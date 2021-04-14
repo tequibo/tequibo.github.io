@@ -36,13 +36,13 @@ function resize() {
 // bunny.y = app.renderer.height / 2
 
 const loader = PIXI.Loader.shared;
-loader.add('battery', 'images/battery_1f50b.png')
-.add('crayon', 'images/lower-left-crayon_1f58d.png');
+loader.add('first', 'images/battery_1f50b.png')
+.add('second', 'images/clown-face_1f921.png')
+.add('third', 'images/smiling-face-with-open-mouth-and-smiling-eyes_1f604.png')
 const sprites = {};
 
 // The `load` method loads the queue of resources, and calls the passed in callback called once all
 // resources have loaded.
-let texture;
 
 loader.load((loader, resources) => {
     // resources is an object where the key is the name of the resource loaded and the value is the resource object.
@@ -51,17 +51,27 @@ loader.load((loader, resources) => {
     // - `error`: The error that happened when trying to load (if any)
     // - `data`: The raw data that was loaded
     // also may contain other properties based on the middleware that runs.
-    texture = resources.battery.texture;
-    // bunny = new PIXI.Sprite(resources.bunny.texture);
-    // app.stage.addChild(bunny)
-    // bunny.anchor.x = 0.5;
-    // bunny.anchor.y = 0.5;
-    // bunny.scale.set(Math.random());
-    // bunny.rotation=Math.random()*6.28;
-    // bunny.x=Math.random()*w;
-    // bunny.y=Math.random()*h;
-
-
+    texture1 = resources.first.texture;
+    texture2 = resources.second.texture;
+    texture3 = resources.third.texture;
+    b1 = new PIXI.Sprite(texture1);
+    b2 = new PIXI.Sprite(texture2);
+    b3 = new PIXI.Sprite(texture3);
+    app.stage.addChild(b1)
+    app.stage.addChild(b2)
+    app.stage.addChild(b3)
+    b1.x=0;
+    b2.x=100;
+    b3.x=200;
+    b1.interactive = true;
+    b1.buttonMode = true;
+    b1.on('pointerdown', onClick1);
+    b2.interactive = true;
+    b2.buttonMode = true;
+    b2.on('pointerdown', onClick2);
+    b3.interactive = true;
+    b3.buttonMode = true;
+    b3.on('pointerdown', onClick3);
     app.ticker.add(delta => gameLoop(delta));
     // pointer = tink.makePointer();
 });
@@ -75,15 +85,14 @@ itr.on('pointerup', ()=>{
     console.log(bs.length);
 });
 bs = [];
+let texture;
 let superFastSprites = new PIXI.ParticleContainer();
 function gameLoop(delta){
     // tink.update();
     if(down){
         let bunny = new PIXI.Sprite(texture);
         bunny.targetScale=Math.random();
-        // bunny.interactive = true;
-        // bunny.buttonMode = true;
-        // bunny.on('pointerdown', onClick);
+        
         bunny.anchor.x = 0.5;
         bunny.anchor.y = 0.5;
         bunny.scale.x=0;
@@ -110,10 +119,14 @@ function gameLoop(delta){
     // bunny.x += (Math.random()-.5)*10*delta;
     // bunny.rotation+=.1;
 }
-function onClick() {
-    console.log("sss");
-    console.log(bs.length);
-
+function onClick1() {
+    texture=texture1;
+}
+function onClick2() {
+    texture=texture2;
+}
+function onClick3() {
+    texture=texture3;
 }
 
 
