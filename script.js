@@ -11,86 +11,110 @@ const viewer = new URLSearchParams(window.location.search).get('viewer')
 
 console.log('NFT created by', creator)
 console.log('NFT viewed by', viewer)
-function setup(){
-    canvas = document.getElementById("canvas");
-    ctx = canvas.getContext("2d");
-    // ctx.fillStyle = 'rgb('+rgb.r+','+rgb.g+','+rgb.b+')';
-    // ctx.fillStyle='rgb(155,155,155)';
-    resize();
-    ctx.textAlign = "center";
-    ctx.font = '18px monospace';
-    ctx.fillText('❤️', w/2, h/2);
-    window.addEventListener("resize", resize);
-}
-function getMousePos(canvas, e) {
-    var rect = canvas.getBoundingClientRect();
-    return {
-    x: e.clientX - rect.left,
-    y: e.clientY - rect.top
-    };
-}
+
+w = window.innerWidth;
+h = window.innerHeight;
+let app = new PIXI.Application({width: w, height: h, antialias: true,});
+
+document.body.appendChild(app.view);
+app.renderer.autoResize = true;
+app.renderer.view.style.position = "absolute";
+app.renderer.view.style.display = "block";
+app.renderer.backgroundColor = 0xfafafa;
+window.addEventListener("resize", resize);
+// let tink = new Tink(PIXI, app.renderer.view);
+resize();
+
 function resize() {
-    w = canvas.width = window.innerWidth;
-    h = canvas.height = window.innerHeight;
+    w = window.innerWidth;
+    h = window.innerHeight;
+    app.renderer.resize(w, h);
 }
-class Particle{
-    constructor(){
+// var bunny = new PIXI.Text('☎️');
+// var bunny = new PIXI.Text('😍');
+// bunny.x = app.renderer.width / 2;
+// bunny.y = app.renderer.height / 2
+
+const loader = PIXI.Loader.shared;
+loader.add('battery', 'images/battery_1f50b.png')
+.add('crayon', 'images/lower-left-crayon_1f58d.png');
+const sprites = {};
+
+// The `load` method loads the queue of resources, and calls the passed in callback called once all
+// resources have loaded.
+let texture;
+
+loader.load((loader, resources) => {
+    // resources is an object where the key is the name of the resource loaded and the value is the resource object.
+    // They have a couple default properties:
+    // - `url`: The URL that the resource was loaded from
+    // - `error`: The error that happened when trying to load (if any)
+    // - `data`: The raw data that was loaded
+    // also may contain other properties based on the middleware that runs.
+    texture = resources.battery.texture;
+    // bunny = new PIXI.Sprite(resources.bunny.texture);
+    // app.stage.addChild(bunny)
+    // bunny.anchor.x = 0.5;
+    // bunny.anchor.y = 0.5;
+    // bunny.scale.set(Math.random());
+    // bunny.rotation=Math.random()*6.28;
+    // bunny.x=Math.random()*w;
+    // bunny.y=Math.random()*h;
+
+
+    app.ticker.add(delta => gameLoop(delta));
+    // pointer = tink.makePointer();
+});
+const itr = app.renderer.plugins.interaction;
+let down=false;
+itr.on('pointerdown', ()=>{
+    down=true;
+});
+itr.on('pointerup', ()=>{
+    down=false;
+    console.log(bs.length);
+});
+bs = [];
+let superFastSprites = new PIXI.ParticleContainer();
+function gameLoop(delta){
+    // tink.update();
+    if(down){
+        let bunny = new PIXI.Sprite(texture);
+        bunny.targetScale=Math.random();
+        // bunny.interactive = true;
+        // bunny.buttonMode = true;
+        // bunny.on('pointerdown', onClick);
+        bunny.anchor.x = 0.5;
+        bunny.anchor.y = 0.5;
+        bunny.scale.x=0;
+        bunny.scale.y=0;
+        bunny.rotation=Math.random()*6.28;
+        bunny.x=itr.mouse.global.x;//Math.random()*w;
+        bunny.y=itr.mouse.global.y;//Math.random()*h;
+        bs.push(bunny);
+
+        app.stage.addChild(bunny)
+        // superFastSprites.addChild(bunny)
+    };
+    for (let index = 0; index < bs.length; index++) {
+        const element = bs[index];
+        element.x += (Math.random()-.5)*2*delta;
+        element.y += (Math.random()-.5)*2*delta;
+        element.scale.x+=(element.targetScale-element.scale.x)/5;
+        element.scale.y+=(element.targetScale-element.scale.y)/2;
+        // element.rotation+=.1;
+
 
     }
+    //Move the cat 1 pixel 
+    // bunny.x += (Math.random()-.5)*10*delta;
+    // bunny.rotation+=.1;
 }
-let mousePos;  
-let mousePosPrev;
-let mousePosMM
-let mouseIsPressed=false;
-let emojis = "qmc20tqx9,30";//☎️😀😁😉😍😛🤨😬😎🤓";
-let smth;
-function draw(e) {
-    // var dt = e-time_old;
-    // time_old = e;
-    requestAnimationFrame(draw);
-    mousePosPrev = mousePos;
-    mousePos = mousePosMM;
-    if (mouseIsPressed) {
-        ctx.save();
-        ctx.translate(mousePos.x, mousePos.y);
-        ctx.rotate(Math.random()*6.28);
-        ctx.textAlign = "center";
-        ctx.font = 55*Math.random()+'px monospace';
-        var emoji = emojis.charAt(Math.floor(Math.random()*emojis.length));
-        if(smth>.5){
-            ctx.fillText("☎️",0, 0);
-        }
-        else{
-            ctx.fillText("🔋",0, 0);
+function onClick() {
+    console.log("sss");
+    console.log(bs.length);
 
-        }
-        ctx.restore();
-    //  console.log('Mouse position: ' + mousePos.x + ',' + mousePos.y);
+}
 
-    }
-}
-canvas.onmousemove = function(e){
-    // mousePosPrev = mousePos;
-    mousePosMM = getMousePos(canvas, e);
-    if(mouseIsPressed){
-      
-    }
-    
-}
-canvas.onmousedown = function(e){
-    mouseIsPressed=true;
-    show_tip=false;
-    smth = Math.random();
-}
-canvas.onmouseup = function(e){
-    mouseIsPressed = false;
-}
-canvas.touchstart  = function(e){
-    mouseIsPressed=true;
-    smth = Math.random();
-}
-canvas.touchend = function(e){
-    mouseIsPressed=true;
-}
-setup();
-draw(1);
+
+
