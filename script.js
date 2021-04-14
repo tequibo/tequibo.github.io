@@ -65,7 +65,7 @@ loader.load((loader, resources) => {
     b3.x=200;
     b1.interactive = true;
     b1.buttonMode = true;
-    b1.on('touchstart', onClick1);
+    b1.on('pointerdown', onClick1);
     b2.interactive = true;
     b2.buttonMode = true;
     b2.on('pointerdown', onClick2);
@@ -98,8 +98,8 @@ function gameLoop(delta){
         bunny.scale.x=0;
         bunny.scale.y=0;
         bunny.rotation=Math.random()*6.28;
-        bunny.x=itr.mouse.global.x;//Math.random()*w;
-        bunny.y=itr.mouse.global.y;//Math.random()*h;
+        bunny.x=itr.eventData.data.global.x;//Math.random()*w;
+        bunny.y=itr.eventData.data.global.y;//Math.random()*h;
         bs.push(bunny);
 
         app.stage.addChild(bunny)
@@ -121,11 +121,11 @@ function gameLoop(delta){
 }
 function onClick1() {
     texture=texture1;
-    b1.scale.y=Math.random()+.5;
+    // b1.scale.y=Math.random()+.5;
 }
 function onClick2() {
     texture=texture2;
-    b2.scale.x=Math.random()+.5;
+    // b2.scale.x=Math.random()+.5;
 
 }
 function onClick3() {
