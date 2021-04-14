@@ -121,6 +121,19 @@ function gameLoop(delta){
 }
 function onClick1() {
     texture=texture1;
+    let bunny = new PIXI.Sprite(texture);
+        bunny.targetScale=Math.random()*.3;
+        
+        bunny.anchor.x = 0.5;
+        bunny.anchor.y = 0.5;
+        bunny.scale.x=0;
+        bunny.scale.y=0;
+        bunny.rotation=Math.random()*6.28;
+        bunny.x=itr.mouse.global.x;//Math.random()*w;
+        bunny.y=itr.mouse.global.y;//Math.random()*h;
+        bs.push(bunny);
+
+        app.stage.addChild(bunny)
 }
 function onClick2() {
     texture=texture2;
