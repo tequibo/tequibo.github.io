@@ -36,9 +36,9 @@ function resize() {
 // bunny.y = app.renderer.height / 2
 
 const loader = PIXI.Loader.shared;
-loader.add('first', 'images/battery_1f50b.png')
-.add('second', 'images/clown-face_1f921.png')
-.add('third', 'images/smiling-face-with-open-mouth-and-smiling-eyes_1f604.png')
+loader.add('first', 'images/rolling-on-the-floor-laughing_1f923.png')
+.add('second', 'images/sparkles_2728.png')
+.add('third', 'images/heavy-black-heart_2764.png')
 const sprites = {};
 
 // The `load` method loads the queue of resources, and calls the passed in callback called once all
@@ -91,15 +91,29 @@ function gameLoop(delta){
     // tink.update();
     if(down){
         let bunny = new PIXI.Sprite(texture);
+        // let bunny =new PIXI.Text('😍');
+        bunny.rotation=Math.random()*6.28;
         bunny.targetScale=Math.random()*.3;
-        
         bunny.anchor.x = 0.5;
         bunny.anchor.y = 0.5;
         bunny.scale.x=0;
         bunny.scale.y=0;
-        bunny.rotation=Math.random()*6.28;
-        bunny.x=itr.eventData.data.global.x;//Math.random()*w;
-        bunny.y=itr.eventData.data.global.y;//Math.random()*h;
+        bunny.x=itr.eventData.data.global.x+(Math.random()-.5)*22;//Math.random()*w;
+        bunny.y=itr.eventData.data.global.y+(Math.random()-.5)*22;//Math.random()*h;
+        if(texture == texture1){
+            bunny.rotate=true;
+        }
+        if(texture == texture2){
+            bunny.sparkles=true;
+            bunny.x=itr.eventData.data.global.x+(Math.random()-.5)*152;//Math.random()*w;
+            bunny.y=itr.eventData.data.global.y+(Math.random()-.5)*152;//Math.random()*h;
+        }
+        if(texture == texture3){
+            bunny.beating=true;
+            bunny.rotation=Math.random()*.5-.25;
+            
+        }
+        
         bs.push(bunny);
 
         app.stage.addChild(bunny)
@@ -108,12 +122,21 @@ function gameLoop(delta){
     for (let index = 0; index < bs.length; index++) {
         const element = bs[index];
         element.x += (Math.random()-.5)*2*delta;
-        element.y += (Math.random()-.5)*2*delta;
-        element.scale.x+=(element.targetScale-element.scale.x)/5;
-        element.scale.y+=(element.targetScale-element.scale.y)/2;
-        // element.rotation+=.1;
-
-
+        element.y += (Math.random()-.5)*2*delta;    
+        if(element.sparkles){
+            element.scale.x+=(element.targetScale*Math.random()-element.scale.x)/2;
+            element.scale.y+=(element.targetScale*Math.random()-element.scale.y)/2;
+        }    
+        if(element.rotate){
+            element.rotation+=.2*delta;
+            element.scale.x+=(element.targetScale-element.scale.x)/5;
+            element.scale.y+=(element.targetScale-element.scale.y)/2;
+        }
+        if(element.beating){
+            var s = Math.abs(Math.sin(Date.now()*.01+index))+.5;
+            element.scale.x+=(element.targetScale*s-element.scale.x)/5;
+            element.scale.y+=(element.targetScale*s-element.scale.y)/2;
+        }
     }
     //Move the cat 1 pixel 
     // bunny.x += (Math.random()-.5)*10*delta;
