@@ -23,11 +23,13 @@ app.renderer.view.style.display = "block";
 app.renderer.backgroundColor = 0x000000;
 window.addEventListener("resize", resize);
 // let tink = new Tink(PIXI, app.renderer.view);
-resize();
 
 function resize() {
     w = window.innerWidth;
     h = window.innerHeight;
+    b1.x=w/2+100;
+    b2.x=w/2-100;
+    b3.x=w/2;
     app.renderer.resize(w, h);
 }
 // var bunny = new PIXI.Text('☎️');
@@ -60,9 +62,19 @@ loader.load((loader, resources) => {
     app.stage.addChild(b1)
     app.stage.addChild(b2)
     app.stage.addChild(b3)
-    b1.x=0;
-    b2.x=100;
-    b3.x=200;
+    b1.anchor.x = 0.5;
+    b1.anchor.y = 1;
+    b2.anchor.x = 0.5;
+    b2.anchor.y = 1;
+    b3.anchor.x = 0.5;
+    b3.anchor.y = 1;
+    b1.x=w/2+100;
+    b2.x=w/2-100;
+    b3.x=w/2;
+    b1.y=h-20;
+    b2.y=h-20;
+    b3.y=h-20;
+    b1.scale.x=b1.scale.y=b2.scale.x=b2.scale.y=b3.scale.x=b3.scale.y=.5;
     b1.interactive = true;
     b1.buttonMode = true;
     b1.on('pointerdown', onClick1);
@@ -73,6 +85,8 @@ loader.load((loader, resources) => {
     b3.buttonMode = true;
     b3.on('pointerdown', onClick3);
     app.ticker.add(delta => gameLoop(delta));
+    resize();
+
     // pointer = tink.makePointer();
 });
 const itr = app.renderer.plugins.interaction;
@@ -92,8 +106,8 @@ function gameLoop(delta){
     if(down){
         let bunny = new PIXI.Sprite(texture);
         // let bunny =new PIXI.Text('😍');
-        bunny.rotation=Math.random()*6.28;
-        bunny.targetScale=Math.random()*.3;
+        bunny.rotation=Math.random()*6.283185;
+        bunny.targetScale=Math.random()*.3+.1;
         bunny.anchor.x = 0.5;
         bunny.anchor.y = 0.5;
         bunny.scale.x=0;
@@ -102,15 +116,23 @@ function gameLoop(delta){
         bunny.y=itr.eventData.data.global.y+(Math.random()-.5)*22;//Math.random()*h;
         if(texture == texture1){
             bunny.rotate=true;
+            bunny.rotSpeed=(Math.random())*.2+.1;
+            bunny.targetScale=.2+Math.random()*.3;
+
         }
         if(texture == texture2){
             bunny.sparkles=true;
-            bunny.x=itr.eventData.data.global.x+(Math.random()-.5)*152;//Math.random()*w;
-            bunny.y=itr.eventData.data.global.y+(Math.random()-.5)*152;//Math.random()*h;
+            let a = Math.random()*6.283185;
+            let d = Math.random()*55;
+            bunny.x=itr.eventData.data.global.x+Math.cos(a)*d;//Math.random()*w;
+            bunny.y=itr.eventData.data.global.y+Math.sin(a)*d;//Math.random()*h;
         }
         if(texture == texture3){
             bunny.beating=true;
+            bunny.f=Math.random()*.01+.001;
             bunny.rotation=Math.random()*.5-.25;
+            bunny.targetScale=.1+Math.random()*.1;
+
             
         }
         
@@ -128,12 +150,12 @@ function gameLoop(delta){
             element.scale.y+=(element.targetScale*Math.random()-element.scale.y)/2;
         }    
         if(element.rotate){
-            element.rotation+=.2*delta;
+            element.rotation+=element.rotSpeed*delta;
             element.scale.x+=(element.targetScale-element.scale.x)/5;
             element.scale.y+=(element.targetScale-element.scale.y)/2;
         }
         if(element.beating){
-            var s = Math.abs(Math.sin(Date.now()*.01+index))+.5;
+            var s = Math.abs(Math.sin(Date.now()*element.f+index))+.5;
             element.scale.x+=(element.targetScale*s-element.scale.x)/5;
             element.scale.y+=(element.targetScale*s-element.scale.y)/2;
         }
