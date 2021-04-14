@@ -20,7 +20,7 @@ document.body.appendChild(app.view);
 app.renderer.autoResize = true;
 app.renderer.view.style.position = "absolute";
 app.renderer.view.style.display = "block";
-app.renderer.backgroundColor = 0xfafafa;
+app.renderer.backgroundColor = 0x000000;
 window.addEventListener("resize", resize);
 // let tink = new Tink(PIXI, app.renderer.view);
 resize();
@@ -65,7 +65,7 @@ loader.load((loader, resources) => {
     b3.x=200;
     b1.interactive = true;
     b1.buttonMode = true;
-    b1.on('pointerdown', onClick1);
+    b1.on('touchstart', onClick1);
     b2.interactive = true;
     b2.buttonMode = true;
     b2.on('pointerdown', onClick2);
@@ -91,7 +91,7 @@ function gameLoop(delta){
     // tink.update();
     if(down){
         let bunny = new PIXI.Sprite(texture);
-        bunny.targetScale=Math.random();
+        bunny.targetScale=Math.random()*.3;
         
         bunny.anchor.x = 0.5;
         bunny.anchor.y = 0.5;
