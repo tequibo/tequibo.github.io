@@ -14,7 +14,7 @@ const viewer = new URLSearchParams(window.location.search).get('viewer')
 
 w = window.innerWidth;
 h = window.innerHeight;
-let app = new PIXI.Application({width: w, height: h, antialias: true,});
+let app = new PIXI.Application({width: 900, height: 900, antialias: true,});
 
 document.body.appendChild(app.view);
 app.renderer.autoResize = true;
