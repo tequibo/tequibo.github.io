@@ -14,7 +14,7 @@ const viewer = new URLSearchParams(window.location.search).get('viewer')
 
 w = window.innerWidth;
 h = window.innerHeight;
-let app = new PIXI.Application({width: 900, height: 900, antialias: true,});
+let app = new PIXI.Application({width: w, height: h, antialias: true,});
 
 document.body.appendChild(app.view);
 app.renderer.autoResize = true;
@@ -196,8 +196,8 @@ function gameLoop(delta){
             bunny.skull=true;
             bunny.rotation=0;counter/10;
             bunny.targetScale=.2+Math.random()*.1;
-            bunny.x=itr.eventData.data.global.x+(Math.random()-.5)*11;//Math.random()*w;
-            bunny.y=itr.eventData.data.global.y+(Math.random()-.5)*11;//Math.random()*h;
+            bunny.x=itr.eventData.data.global.x+(Math.random()-.5)*5;//Math.random()*w;
+            bunny.y=itr.eventData.data.global.y+(Math.random()-.5)*5;//Math.random()*h;
             
         }
         if(texture == texture6){
@@ -205,11 +205,15 @@ function gameLoop(delta){
             bunny.rotation=counter/20;
             bunny.anchor.x = 0;
             bunny.anchor.y = 0;
+            bunny.targetScale=.3;
+
             bunny.x=itr.eventData.data.global.x+(Math.random()-.5)*1;//Math.random()*w;
             bunny.y=itr.eventData.data.global.y+(Math.random()-.5)*1;//Math.random()*h;
             bunny.f=Math.random()*.0001+.016;
             
         }
+        bunny.xO=bunny.x;
+        bunny.yO=bunny.y;
         bs.push(bunny);
 
         app.stage.addChild(bunny)
@@ -248,14 +252,14 @@ function gameLoop(delta){
         }
         else if(element.eggplant){
             // element.rotation+=.1;
-            element.s=(1-Math.sin(Date.now()*0.003+index*.2))*.3+.3;
+            element.s=(1-Math.sin(Date.now()*0.003+index*.2))*.3+.5;
             element.scale.x+=(element.targetScale*element.s-element.scale.x)/3;
             element.scale.y+=(element.targetScale*element.s-element.scale.y)/3;
         }
         else if(element.skull){
             // element.rotation+=.1;
-            element.x += (Math.random()-.5)*delta;
-            element.y += (Math.random()-.5)*delta; 
+            element.x = element.xO+noise.simplex2(element.xO+Date.now()*.005,element.yO);(Math.random()-.5)*2;
+            element.y = element.yO+noise.simplex2(element.xO,element.yO+Date.now()*.005);;//+(Math.random()-.5)*2; 
             element.scale.x+=(element.targetScale-element.scale.x)/5;
             element.scale.y+=(element.targetScale-element.scale.y)/2;
         }
@@ -296,7 +300,7 @@ function onClick5() {//skull
 }
 function onClick6() {//eggplant
     texture=texture6;
-    freq=1;
+    freq=2;
 }
 
 
