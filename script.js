@@ -23,27 +23,27 @@ app.renderer.view.style.display = "block";
 app.renderer.backgroundColor = 0x000000;
 window.addEventListener("resize", resize);
 // let tink = new Tink(PIXI, app.renderer.view);
-let bs;
+let bside
 function resize() {
     w = window.innerWidth;
     h = window.innerHeight;
-    if(w>500){
+    if(w>600){
         b1.scale.x=b1.scale.y=b2.scale.x=b2.scale.y=b3.scale.x=b3.scale.y=
         b4.scale.x=b4.scale.y=b5.scale.x=b5.scale.y=b6.scale.x=b6.scale.y=.5;
     }
     else{
         b1.scale.x=b1.scale.y=b2.scale.x=b2.scale.y=b3.scale.x=b3.scale.y=
-        b4.scale.x=b4.scale.y=b5.scale.x=b5.scale.y=b6.scale.x=b6.scale.y=.2;
+        b4.scale.x=b4.scale.y=b5.scale.x=b5.scale.y=b6.scale.x=b6.scale.y=.25;
     }
     
-        bs=b1.width*1.2;
+    bside=b1.width*1.2;
 
-    b1.x=w/2+bs/2+bs*2;
-    b2.x=w/2+bs/2+bs;
-    b3.x=w/2+bs/2;
-    b4.x=w/2-bs/2;
-    b5.x=w/2-bs/2-bs;
-    b6.x=w/2-bs/2-bs*2;
+    b1.x=w/2+bside/2+bside*2;
+    b2.x=w/2+bside/2+bside;
+    b3.x=w/2+bside/2;
+    b4.x=w/2-bside/2;
+    b5.x=w/2-bside/2-bside;
+    b6.x=w/2-bside/2-bside*2;
 
     b1.y=h-20;
     b2.y=h-20;
