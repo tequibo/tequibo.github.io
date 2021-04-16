@@ -23,16 +23,27 @@ app.renderer.view.style.display = "block";
 app.renderer.backgroundColor = 0x000000;
 window.addEventListener("resize", resize);
 // let tink = new Tink(PIXI, app.renderer.view);
-
+let bs;
 function resize() {
     w = window.innerWidth;
     h = window.innerHeight;
-    b1.x=w/2+250;
-    b2.x=w/2+150;
-    b3.x=w/2+50;
-    b4.x=w/2-50;
-    b5.x=w/2-150;
-    b6.x=w/2-250;
+    if(w>500){
+        b1.scale.x=b1.scale.y=b2.scale.x=b2.scale.y=b3.scale.x=b3.scale.y=
+        b4.scale.x=b4.scale.y=b5.scale.x=b5.scale.y=b6.scale.x=b6.scale.y=.5;
+    }
+    else{
+        b1.scale.x=b1.scale.y=b2.scale.x=b2.scale.y=b3.scale.x=b3.scale.y=
+        b4.scale.x=b4.scale.y=b5.scale.x=b5.scale.y=b6.scale.x=b6.scale.y=.2;
+    }
+    
+        bs=b1.width*1.2;
+
+    b1.x=w/2+bs/2+bs*2;
+    b2.x=w/2+bs/2+bs;
+    b3.x=w/2+bs/2;
+    b4.x=w/2-bs/2;
+    b5.x=w/2-bs/2-bs;
+    b6.x=w/2-bs/2-bs*2;
 
     b1.y=h-20;
     b2.y=h-20;
@@ -41,8 +52,7 @@ function resize() {
     b5.y=h-20;
     b6.y=h-20;
     app.renderer.resize(w, h);
-    b1.scale.x=b1.scale.y=b2.scale.x=b2.scale.y=b3.scale.x=b3.scale.y=
-    b4.scale.x=b4.scale.y=b5.scale.x=b5.scale.y=b6.scale.x=b6.scale.y=.5;
+    
 }
 // var bunny = new PIXI.Text('☎️');
 // var bunny = new PIXI.Text('😍');
