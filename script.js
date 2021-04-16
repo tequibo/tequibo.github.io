@@ -41,6 +41,8 @@ function resize() {
     b5.y=h-20;
     b6.y=h-20;
     app.renderer.resize(w, h);
+    b1.scale.x=b1.scale.y=b2.scale.x=b2.scale.y=b3.scale.x=b3.scale.y=
+    b4.scale.x=b4.scale.y=b5.scale.x=b5.scale.y=b6.scale.x=b6.scale.y=.5;
 }
 // var bunny = new PIXI.Text('☎️');
 // var bunny = new PIXI.Text('😍');
