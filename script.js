@@ -1,39 +1,33 @@
 import * as THREE from './three.module.js';
-import { OrbitControls } from './node_modules/three/examples/jsm/controls/OrbitControls.js';
+// import { OrbitControls } from '/OrbitControls.js';
 
 const TAU = 6.283185;
 
 window.addEventListener("resize", resize);
-let w = window.innerWidth;
-let h = window.innerHeight;
+let w = window.innerWidth-30;
+let h = w;//window.innerHeight;
 function resize() {
-    w = window.innerWidth;
-    h = window.innerHeight;  
-    camera.aspect = window.innerWidth / window.innerHeight;
+    w = window.innerWidth-30;
+    h = window.innerWidth-30;//window.innerHeight;  
+    camera.aspect = w / h;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(w, h);
 }
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setSize(w, h);
 document.body.appendChild(renderer.domElement);
 
-var stats = new Stats();
-stats.showPanel( 1 );
-document.body.appendChild( stats.dom )
+
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0,0,0);
+scene.background = new THREE.Color(0,1,1);
 
-const camera = new THREE.PerspectiveCamera(95, window.innerWidth/window.innerHeight, 0.1, 2000);
-camera.position.y = 40;
-camera.position.z = 40;
+const camera = new THREE.PerspectiveCamera(95, w/h, 0.1, 2000);
+camera.position.y = 0;
+camera.position.z = 20;
 camera.lookAt(0,0,0);
 
-const p_light = new THREE.PointLight(0x00ffff, 12, 200);
-
-const hemiLight = new THREE.HemisphereLight( 0xffffff, 0xff00ff, .01 );
-// hemiLight.color.setHSL( 0.6, 1, 0.6 );
 
 
 const dir_light1 = new THREE.DirectionalLight( 0xffffff, 1 );
@@ -49,15 +43,15 @@ scene.add(dir_light1);
 scene.add(dir_light2);
 scene.add(dir_light3);
 
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(0, 0, 0);
-controls.update();
+// const controls = new OrbitControls(camera, renderer.domElement);
+// controls.target.set(0, 0, 0);
+// controls.update();
 
 let cubes =[];
 const s_geometry = new THREE.SphereGeometry(.5,50,50);
 const c_geometry = new THREE.BoxGeometry();
-const mat1=new THREE.MeshPhysicalMaterial({color: 0x00ffff})
-const mat2=new THREE.MeshPhysicalMaterial({color: 0xff0000})
+const mat1=new THREE.MeshBasicMaterial({color: 0x00})
+const mat2=new THREE.MeshBasicMaterial({color: 0xffffff})
 const diffuseColor = new THREE.Color().setHSL( 1, 0.5, 0.25 );
 const material3 = new THREE.MeshPhysicalMaterial( {
     color: 0xff0000,
@@ -76,7 +70,7 @@ const material4 = new THREE.MeshPhysicalMaterial( {
 } );
 
 function addParticle(){
-    let mat = Math.random()>.5?material4:material3;
+    let mat = Math.random()>.5?mat1:mat2;
     const cube = new THREE.Mesh(c_geometry, mat);
     // const cube2 = new THREE.Mesh(s_geometry, mat);
     cube.life=1;
@@ -98,8 +92,8 @@ function addParticle(){
 let counter=0;
 function animate() {
 	requestAnimationFrame(animate);
-    let t = Date.now()*0.01*settings.timescale;
-    if(counter<1100 &&rr(0,1)>.98){
+    let t = Date.now()*0.01;
+    if(counter<1100 &&rr(0,1)>.92){
         addParticle();
         counter++;
     }
@@ -114,22 +108,21 @@ function animate() {
         c.userData.velocity.multiplyScalar(.95);
         c.userData.s_velocity.multiplyScalar(.95);
         c.userData.r_velocity.multiplyScalar(.95);
-        c.rotateX(c.userData.r_velocity.x);
-        c.rotateY(c.userData.r_velocity.y);
-        c.rotateZ(c.userData.r_velocity.z);
+        // c.rotateX(c.userData.r_velocity.x);
+        // c.rotateY(c.userData.r_velocity.y);
+        // c.rotateZ(c.userData.r_velocity.z);
         c.life-=c.lifedecay;
         if(Math.random()>.99){
             var s = .1;
             let r = rr(0,.99);
             if(r>.66){
-                c.userData.velocity.add(new THREE.Vector3(rr(-s,s),rr(-s,s),rr(-s,s)));
+                c.userData.velocity.add(new THREE.Vector3(rr(-s,s),0,0));
             }
             else if(r>.33){
-                c.userData.s_velocity.add(new THREE.Vector3(rr(-s,s),rr(-s,s),rr(-s,s)));
+                c.userData.velocity.add(new THREE.Vector3(0,rr(-s,s),0));
             }
             else {
-            let rs = .01;
-                c.userData.r_velocity=new THREE.Vector3(rr(-rs,rs),rr(-rs,rs),rr(-rs,rs));
+                c.userData.velocity.add(new THREE.Vector3(0,0,rr(-s,s)));
             }
         }
     }
@@ -146,19 +139,11 @@ function animate() {
     counter++;
     // controls.update();
 	renderer.render( scene, camera );
-    stats.update();
+    // stats.update();
     // stats.end();
 }
 
-let gui = new dat.GUI();
-let settings = {timescale:1,color:new THREE.Color()};
-setValue();
-// gui.addColor(mat1, 'color').onChange(setValue);
-// gui.add(rad, 'message').onChange(setValue);
-gui.add(settings, 'timescale', 0.1, 5).onChange(setValue);
-function setValue() {
-    // mat1.color = settings.color;
-}
+
 animate();
 function rr(min, max){
     return min+Math.random()*(max-min);
