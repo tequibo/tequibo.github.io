@@ -5,7 +5,7 @@ const TAU = 6.283185;
 
 window.addEventListener("resize", resize);
 let w = window.innerWidth-30;
-let h = w;//window.innerHeight;
+let h = 500;//window.innerHeight;
 function resize() {
     w = window.innerWidth-30;
     h = window.innerWidth-30;//window.innerHeight;  
