@@ -1,0 +1,9 @@
+{
+    "glsl-canvas.uniforms": {
+        "u_param1": 1.0,
+        "u_param2": 1.0,
+        "u_param3": 1.0,
+        "u_param4": 1.0,
+        "u_param5": 1.0
+    }    
+}
