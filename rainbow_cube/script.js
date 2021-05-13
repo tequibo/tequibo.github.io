@@ -26,20 +26,21 @@ document.body.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x000000);
 
-const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 2000);
-camera.position.z = 400;
-camera.position.y = 400;
-camera.position.x = 400;
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 10000);
+camera.position.z = 30;
+camera.position.y = 30;
+camera.position.x = 30;
 camera.lookAt(0,0,0);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 0, 0);
 controls.enableDamping=true;
 controls.dampingFactor=0.06;
+controls.enablePan=false;
 controls.update();
 let cubes =[];
 const s_geometry = new THREE.SphereGeometry(.5,50,50);
-const c_geometry = new THREE.BoxGeometry();
+const c_geometry = new THREE.BoxGeometry(.1,.1,.1);
 
 function addParticle(position, color){
     const black = new THREE.MeshBasicMaterial({color: color});
@@ -58,8 +59,8 @@ function addParticle(position, color){
     return p;
 }
 
-let am=9
-let space=20;
+let am=8
+let space=2;
 for (let i = 0; i < am; i++) {
     for (let j = 0; j < am; j++) {
         for (let k = 0; k < am; k++) {
@@ -84,6 +85,9 @@ for (let i = 0; i < am; i++) {
 }
 
 let counter=1;
+let color1 = new THREE.Color("red");
+let color2 = new THREE.Color("cyan");
+
 function animate() {
 	requestAnimationFrame(animate);
     let t = Date.now()*0.01*settings.timescale;  
@@ -92,11 +96,15 @@ function animate() {
         const c = cubes[i];
         let m =.005;
         //let s = 10;Math.abs(noise.simplex3(c.x*m+Math.sin(t*settings.rot_speed)*.2,c.y*m-t,c.z*m+Math.cos(t*settings.rot_speed)*.2))*32;
-        let s = settings.cube_size*1.5-Math.sin(c.l*settings.scale_mod-t)*settings.cube_size;
+        let s = settings.cube_size*1.1-Math.sin(c.l*settings.scale_mod-t)*settings.cube_size;
         // let s = EasingFunctions.easeOutQuad((c.l*settings.scale_mod-t)%1)*settings.cube_size;
         // s=Math.abs(s);
         // c.scale.set(1+s*c.sc.x,1+s*c.sc.y,1+s*c.sc.z)
-        c.mat.color.setHSL(.2+Math.sin(c.l*settings.scale_mod-t)*.2, .6, .5)
+        c.mat.color.setHSL(.3+Math.sin(c.l*settings.scale_mod-t)*.3, .8, .6)
+        c.mat.color.setHSL(t*.1, .8, .3+Math.sin(c.l*settings.scale_mod-t)*.3)
+        // let temp_color = new THREE.Color(color1);
+        // temp_color.lerpHSL(color1,color2,.5+Math.sin((1-c.l)*settings.scale_mod-t)*.5)
+        // c.mat.color = temp_color;
         c.scale.set(s,s,s);
         const up = new THREE.Vector3(0,1,0);
         // c.position.applyAxisAngle(up,0.01);
@@ -111,17 +119,13 @@ function animate() {
 
 }
 
-let gui = new dat.GUI();
-let settings = {timescale:.3,scale_mod:.05,cube_size:10., color:new THREE.Color()};
-setValue();
-// gui.addColor(mat1, 'color').onChange(setValue);
-// gui.add(rad, 'message').onChange(setValue);
-gui.add(settings, 'timescale', 0.1, 1.5).onChange(setValue);
-gui.add(settings, 'scale_mod', 0.01, .2).onChange(setValue);
-gui.add(settings, 'cube_size', 1, 20).onChange(setValue);
-function setValue() {
-    // mat1.color = settings.color;
-}
+let settings = {timescale:.2,scale_mod:.3,cube_size:10., color:new THREE.Color()};
+// let gui = new dat.GUI();
+
+// gui.add(settings, 'timescale', 0.1, 1.5)
+// gui.add(settings, 'scale_mod', 0.01, 1.2)
+// gui.add(settings, 'cube_size', 1, 20)
+
 
 animate();
 
