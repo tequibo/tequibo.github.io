@@ -15,6 +15,10 @@ function resize() {
     renderer.setSize(w, h);
 }
 
+function rr(min, max){
+    return min+Math.random()*(max-min);
+}
+
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -68,8 +72,9 @@ for (let i = 0; i < am; i++) {
             // pos.x+=rr(-11,11);
             // pos.y+=rr(-11,11);
             // pos.z+=rr(-11,11);
-            let color = new THREE.Color().setHSL(.4, .7, 1-pos.length()*.007);
+            let color = new THREE.Color('grey');
             let p = addParticle(pos,color);
+            p.mat.color=color;
             p.pos = pos.clone();
             p.l=pos.length();
             p.x = pos.x;
@@ -77,21 +82,46 @@ for (let i = 0; i < am; i++) {
             p.z = pos.z;
             p.sc = new THREE.Vector3();
             p.sc.random();
-            // p.rotation.z=rr(0,TAU);
-            // p.rotation.x=rr(0,TAU);
-            // p.rotation.y=rr(0,TAU);//noise.simplex3(c.x,c.y*m,c.z)*TAU;
+            p.scale.set(20,20,20);
+            p.go=false;
+            
         }
     }    
 }
+const mouse = new THREE.Vector2();
+const raycaster = new THREE.Raycaster();
+function onMouseMove(event) {
 
+	// calculate mouse position in normalized device coordinates
+	// (-1 to +1) for both components
+
+	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+}
+window.addEventListener( 'mousemove', onMouseMove, false );
 let counter=1;
 let color1 = new THREE.Color("red");
 let color2 = new THREE.Color("cyan");
-
 function animate() {
-	requestAnimationFrame(animate);
     let t = Date.now()*0.01*settings.timescale;  
+    raycaster.setFromCamera( mouse, camera );
+    const intersects = raycaster.intersectObjects( scene.children );
 
+	for ( let i = 0; i < intersects.length; i ++ ) {
+
+		// intersects[i].object.material.color.set( 0xff0000 );
+        let p = intersects[i].object;
+        p.go=true;
+        p.l=t;
+        p.rotation.z=rr(0,TAU);
+        p.rotation.x=rr(0,TAU);
+        p.rotation.y=rr(0,TAU);//noise.simplex3(c.x,c.y*m,c.z)*TAU;
+        p.mat.color.setHSL(rr(0,1), .8, .5)
+        p.scale.set(rr(.5,settings.cube_size),rr(.5,settings.cube_size),rr(.5,settings.cube_size));
+
+
+	}
     for (let i = 0; i < cubes.length; i++) {
         const c = cubes[i];
         let m =.005;
@@ -100,31 +130,34 @@ function animate() {
         // let s = EasingFunctions.easeOutQuad((c.l*settings.scale_mod-t)%1)*settings.cube_size;
         // s=Math.abs(s);
         // c.scale.set(1+s*c.sc.x,1+s*c.sc.y,1+s*c.sc.z)
-        c.mat.color.setHSL(.3+Math.sin(c.l*settings.scale_mod-t)*.3, .8, .6)
-        c.mat.color.setHSL(t*.1, .8, .3+Math.sin(c.l*settings.scale_mod-t)*.3)
+        // c.mat.color.setHSL(.3+Math.sin(c.l*settings.scale_mod-t)*.3, .8, .6)
         // let temp_color = new THREE.Color(color1);
         // temp_color.lerpHSL(color1,color2,.5+Math.sin((1-c.l)*settings.scale_mod-t)*.5)
         // c.mat.color = temp_color;
-        c.scale.set(s,s,s);
+        if(c.go){
+            // c.scale.set(s,s,s);
+            // c.mat.color.setHSL(1, .8, Math.sin(c.l+t*.1))
+        }
         const up = new THREE.Vector3(0,1,0);
         // c.position.applyAxisAngle(up,0.01);
         // c.position.set(c.start_pos);
         
         // c.userData.velocity.multiplyScalar(.98);   
-
+        
     }
     controls.update();
 	renderer.render(scene, camera);
+    requestAnimationFrame(animate);
     // stats.update();
 
 }
 
-let settings = {timescale:.2,scale_mod:.3,cube_size:10., color:new THREE.Color()};
-// let gui = new dat.GUI();
+let settings = {timescale:.2,scale_mod:.3,cube_size:30., color:new THREE.Color()};
+let gui = new dat.GUI();
 
-// gui.add(settings, 'timescale', 0.1, 1.5)
-// gui.add(settings, 'scale_mod', 0.01, 1.2)
-// gui.add(settings, 'cube_size', 1, 20)
+gui.add(settings, 'timescale', 0.1, 1.5)
+gui.add(settings, 'scale_mod', 0.01, 1.2)
+gui.add(settings, 'cube_size', 1, 40)
 
 
 animate();
