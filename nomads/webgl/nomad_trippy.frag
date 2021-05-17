@@ -300,11 +300,42 @@ vec3 getColor(vec2 uv){
             cos(p.y*23.-p.x*23.+(u_time*1.)*TAU), 
             cos(p.y*23.-p.x*23.+(u_time*1.)*TAU));
         }
+        if(head_pattern==5.){
+            float cc = cos(p.y*33.+u_time*5.+sin(u_time*10.));
+            cc = smoothstep(0.,0.1,cc);           
+            col=oklab_mix(vec3(0.0235, 0.6863, 0.7216), vec3(0.8941, 0.0, 0.3255),cc);
+        }
+        if(head_pattern==6.){
+            float cc = cos(cos(p.x*33.)+u_time*5.+sin(u_time*10.));
+            cc = smoothstep(0.,0.1,cc);           
+            col=oklab_mix(vec3(0.7216, 0.0235, 0.4314), vec3(0.8863, 0.8392, 0.8588),cc);
+        }
+        if(head_pattern==7.){
+            col=vec3(sin(u_time*2.), sin(u_time*.1), sin(u_time*.2));
+        }
+        if(head_pattern==8.){
             col=vec3(
-            cos(p.y*23.-p.x*23.+(u_time*1.1)*TAU), 
-            cos(p.y*23.-p.x*23.+(u_time*1.)*TAU), 
-            cos(p.y*23.-p.x*23.+(u_time*1.)*TAU));
-
+            cos(p.y*3.*p.x*3.+(u_time*.1)*TAU), 
+            cos(p.y*3.*p.x*3.+(u_time*.2)*TAU), 
+            cos(p.y*3.*p.x*3.+(u_time*1.)*TAU));
+            col=abs(col);
+        }
+        if(head_pattern==9.){
+            float cc = cos(p.y*3.+u_time*3.+sin(u_time*6.+p.x));
+            cc = smoothstep(0.,0.01,cc);           
+            col=oklab_mix(vec3(0.1804, 0.9333, 1.0), vec3(0.9804, 0.0039, 0.3608),cc);
+        }
+        if(head_pattern==10.){
+            float cc = cos(p.x*15.+sin(u_time*3.+p.y*4.)-u_time*5.);
+            cc = smoothstep(0.,0.01,cc); 
+            float cc2 = cos(p.x*15.+sin(u_time*3.+p.y*4.)+u_time*5.);
+            cc2 = smoothstep(0.,0.01,cc2);       
+            col=vec3(cc,cc2,cc2); 
+        }
+                
+            // col=abs(col);
+            // col=oklab_mix(vec3(0.7137, 0.0275, 0.0275), vec3(1.0, 0.0118, 0.8353),cc);
+            
         // float c = length(p.xy)-.1;
         if(p.z>0.){
             vec2 po = getNormal(p).xy;
@@ -399,16 +430,50 @@ vec3 getColor(vec2 uv){
             cos(p.y*23.+(u_time*3.)*TAU)));
         }
         if(body_pattern==5.0){
+            float cc = sin(p.y*13.+u_time*5.+sin(u_time*5.));
+            float cc2 = sin(p.y*5.+u_time*5.);
+            float cc3 = sin(p.y*3.+u_time*5.);
+            cc = smoothstep(0.,0.1,cc);
+            cc2 = smoothstep(0.,0.1,cc2);
+            cc3 = smoothstep(0.,0.1,cc3);
+            col=vec3(cc, cc2, cc2);
         }
         if(body_pattern==6.0){
+            col=oklab_mix(vec3(0.8549, 0.0392, abs(sin(u_time*5.))), vec3(0.0118, 0.6667, abs(sin(u_time*2.))),p.y*3.+3.0);
         }
         if(body_pattern==7.0){
+            col=abs(vec3(
+            cos(sin(p.y*3.)-cos(p.x*23.)+(u_time*.1)*TAU), 
+            cos(p.y*3.-sin(p.x*23.)+(u_time*.1)*TAU), 
+            cos(cos(p.y*3.)-(u_time*.1)*TAU)));
         }
         if(body_pattern==8.0){
+            float cc = sin(p.y*33.+u_time*5.+sin(u_time*10.))-.8;
+            cc = smoothstep(0.,0.1,cc);
+            float cc2 = sin(p.y*33.-u_time*5.+sin(u_time*10.))-.8;
+            cc2 = smoothstep(0.,0.1,cc2);
+            col=vec3(cc, cc2, cc2);
         }
         if(body_pattern==9.0){
+            float cc = sin(p.y*33.+p.x*33.+sin(p.y*233.+u_time*10.)+u_time*15.+sin(u_time*10.))-.8;
+            cc = smoothstep(0.,0.1,cc);
+            float cc2 = sin(p.y*33.+p.x*33.+cos(p.y*133.-u_time*10.)-u_time*5.+sin(u_time*20.))-.8;
+            cc2 = smoothstep(0.,0.1,cc2);
+            col=vec3(cc, cc2, cc2);
         }
-            
+        if(body_pattern==10.0){
+            float cc = sin(p.y*33.+u_time*15.)-.4;
+            cc = smoothstep(0.,0.3,cc);
+            // col=vec3(cc, 0., 0.);
+            col=oklab_mix(vec3(0.7059, 0.0, 0.1412), vec3(0.0, 0.8588, 0.7882),cc);
+        }
+        if(body_pattern==11.0){
+             float cc = cos(cos(p.y*53.)+cos(p.x*53.)+u_time*15.+sin(u_time*10.));
+            cc = smoothstep(0.,0.1,cc);
+           
+            col=oklab_mix(vec3(0.5843, 0.7804, 0.0392), vec3(0.0, 0.0, 0.0),cc);
+        }
+         
 
     }
     //background
@@ -428,7 +493,7 @@ vec3 getColor(vec2 uv){
 }
 void main() {    
     vec2 R = u_resolution.xy;
-    vec2 uv = (2.*gl_FragCoord.xy-R)/R.x;
+    vec2 uv = (2.*gl_FragCoord.xy-R)/R.y;
     vec3 col = vec3(0.0, 0.0, 0.0);
     col = getColor(uv);
     // const float AA_size = 2.0;

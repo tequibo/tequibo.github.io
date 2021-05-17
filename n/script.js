@@ -73,6 +73,7 @@ var eye_spaceUniformLocation = gl.getUniformLocation(program, "eye_space");
 var eye_sizeUniformLocation = gl.getUniformLocation(program, "eye_size");
 var eye_variantUniformLocation = gl.getUniformLocation(program, "eye_variant");
 var iris_scaleUniformLocation = gl.getUniformLocation(program, "iris_scale");
+var mouth_curveUniformLocation = gl.getUniformLocation(program, "mouth_curve");
 
 var head_patternUniformLocation = gl.getUniformLocation(program, "head_pattern");
 var body_patternUniformLocation = gl.getUniformLocation(program, "body_pattern");
@@ -103,6 +104,7 @@ var draw=function(time){
     gl.uniform1f(eye_sizeUniformLocation, settings.eye_size);
     gl.uniform1f(eye_variantUniformLocation, Math.floor(settings.eye_variant));
     gl.uniform1f(iris_scaleUniformLocation, settings.iris_scale);
+    gl.uniform1f(mouth_curveUniformLocation, settings.mouth_curve);
     gl.uniform1f(head_patternUniformLocation, Math.floor(settings.head_pattern));
     gl.uniform1f(body_patternUniformLocation, Math.floor(settings.body_pattern));
     gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -121,6 +123,7 @@ let settings = {
     eye_size:1, 
     eye_variant:0, 
     iris_scale:1,
+    mouth_curve:1,
     head_pattern:1,
     body_pattern:1,
     randomize: Randomize
@@ -133,8 +136,9 @@ function Randomize(){
   settings.eye_size = rr(0.2, 1);
   settings.eye_variant = rr(0, 3);
   settings.iris_scale = rr( 0.1, 1);
-  settings.head_pattern = rr(0, 3);
-  settings.body_pattern = rr(0, 3);
+  settings.mouth_curve = rr( 0.1, 1);
+  settings.head_pattern = rr(0, 10);
+  settings.body_pattern = rr(0, 11);
   
 }
 gui.add(settings, 'eyebrow_angle', -.1, .1).step(.01).listen()
@@ -143,9 +147,10 @@ gui.add(settings, 'eyebrow_offset', -0.1, .1).listen()
 gui.add(settings, 'eye_space', 0.3, .6).listen()
 gui.add(settings, 'eye_size', 0.2, 1).listen()
 gui.add(settings, 'eye_variant', 0, 5).listen()
-gui.add(settings, 'iris_scale', 0.1, 1).listen()
-gui.add(settings, 'head_pattern', 0, 4).listen()
-gui.add(settings, 'body_pattern', 0, 4).listen()
+gui.add(settings, 'iris_scale', 0.3, 1).listen()
+gui.add(settings, 'mouth_curve', 0, 1).listen()
+gui.add(settings, 'head_pattern', 0, 10).listen()
+gui.add(settings, 'body_pattern', 0, 11).listen()
 gui.add(settings, 'randomize');
 // main();
 
@@ -176,6 +181,7 @@ function onTouchUp(event){
   rotation_hor_prev = rotation_hor;
 }
 canvas.addEventListener( 'mousemove', onMouseMove, false );
+canvas.addEventListener( 'touchmove', onMouseMove, false );
 canvas.addEventListener( 'touchstart', onTouch);
 canvas.addEventListener( 'mousedown', onTouch);
 canvas.addEventListener( 'mouseup', onTouchUp);

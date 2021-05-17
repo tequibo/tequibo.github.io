@@ -34,8 +34,9 @@ if (!gl) {
     // return;
 }
 function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width=gl.canvas.width = window.innerWidth;
+    canvas.height = gl.canvas.height=window.innerHeight;
+    gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 }    
 resize();    
 window.addEventListener("resize", resize);
@@ -137,8 +138,8 @@ function Randomize(){
   settings.eye_variant = rr(0, 3);
   settings.iris_scale = rr( 0.1, 1);
   settings.mouth_curve = rr( 0.1, 1);
-  settings.head_pattern = rr(0, 3);
-  settings.body_pattern = rr(0, 3);
+  settings.head_pattern = rr(0, 10);
+  settings.body_pattern = rr(0, 11);
   
 }
 gui.add(settings, 'eyebrow_angle', -.1, .1).step(.01).listen()
@@ -150,7 +151,7 @@ gui.add(settings, 'eye_variant', 0, 5).listen()
 gui.add(settings, 'iris_scale', 0.3, 1).listen()
 gui.add(settings, 'mouth_curve', 0, 1).listen()
 gui.add(settings, 'head_pattern', 0, 10).listen()
-gui.add(settings, 'body_pattern', 0, 10).listen()
+gui.add(settings, 'body_pattern', 0, 11).listen()
 gui.add(settings, 'randomize');
 // main();
 
@@ -181,6 +182,7 @@ function onTouchUp(event){
   rotation_hor_prev = rotation_hor;
 }
 canvas.addEventListener( 'mousemove', onMouseMove, false );
+canvas.addEventListener( 'touchmove', onMouseMove, false );
 canvas.addEventListener( 'touchstart', onTouch);
 canvas.addEventListener( 'mousedown', onTouch);
 canvas.addEventListener( 'mouseup', onTouchUp);
