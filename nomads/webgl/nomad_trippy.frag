@@ -273,7 +273,7 @@ vec3 getColor(vec2 uv){
     // vec3 lightDirection = normalize(light1Pos - p);
     // vec3 h = normalize (-rd + lightDirection);
     // float specular = pow (max (.0, dot (getNormal(p), h)), 222.2);
-    vec3 col = vec3(0.1451, 0.0078, 0.0078);
+    vec3 col = vec3(0.0667, 0.5216, 0.5804);
 
     if(d_m.y==1.0){//head
         
@@ -298,9 +298,12 @@ vec3 getColor(vec2 uv){
             col=vec3(
             cos(p.y*23.-p.x*23.+(u_time*1.1)*TAU), 
             cos(p.y*23.-p.x*23.+(u_time*1.)*TAU), 
-            cos(p.y*23.-p.x*23.+(u_time*5.)*TAU));
+            cos(p.y*23.-p.x*23.+(u_time*1.)*TAU));
         }
-
+            col=vec3(
+            cos(p.y*23.-p.x*23.+(u_time*1.1)*TAU), 
+            cos(p.y*23.-p.x*23.+(u_time*1.)*TAU), 
+            cos(p.y*23.-p.x*23.+(u_time*1.)*TAU));
 
         // float c = length(p.xy)-.1;
         if(p.z>0.){
@@ -367,9 +370,9 @@ vec3 getColor(vec2 uv){
     }
     //body
     if(d_m.y==2.0){
-        col=vec3(0.9412, 0.8902, 0.9176);
+        col=vec3(0.0392, 0.0, 0.0196);
         //diagonal
-        if(head_pattern==.0){
+        if(body_pattern==.0){
             col=vec3(
             cos(p.y*23.+p.x*23.+(u_time*5.1)*TAU), 
             cos(p.y*23.+p.x*23.+(u_time*5.)*TAU), 
@@ -390,8 +393,23 @@ vec3 getColor(vec2 uv){
             col=oklab_mix(vec3(0.8549, 0.0392, 0.2157), vec3(0.0118, 0.6667, 0.6353),p.y*3.+3.0);
         }
         if(body_pattern==4.0){
-            col=abs(getNormal(p)+.7);
+            col=abs(vec3(
+            cos(p.y*23.+p.x*23.+(u_time*1.1)*TAU), 
+            cos(p.y*23.-p.x*3.+(u_time*2.)*TAU), 
+            cos(p.y*23.+(u_time*3.)*TAU)));
         }
+        if(body_pattern==5.0){
+        }
+        if(body_pattern==6.0){
+        }
+        if(body_pattern==7.0){
+        }
+        if(body_pattern==8.0){
+        }
+        if(body_pattern==9.0){
+        }
+            
+
     }
     //background
     if(d_m.x>3.){
