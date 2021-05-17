@@ -135,7 +135,7 @@ function Randomize(){
   settings.eyebrow_offset = rr(-0.1, .1);
   settings.eye_space = rr(0.3, .6);
   settings.eye_size = rr(0.2, 1);
-  settings.eye_variant = rr(0, 3);
+  settings.eye_variant = rr(0, 5);
   settings.iris_scale = rr( 0.1, 1);
   settings.mouth_curve = rr( 0.1, 1);
   settings.head_pattern = rr(0, 10);
