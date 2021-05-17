@@ -19,6 +19,9 @@ uniform float iris_scale;
 uniform float eye_space;
 uniform float eye_size;
 uniform float eye_variant;
+uniform float head_pattern;
+uniform float body_pattern;
+uniform float mouth_variant;
 uniform float mouth_curve;
 vec3 oklab_mix( vec3 colA, vec3 colB, float h )
 {
@@ -273,14 +276,32 @@ vec3 getColor(vec2 uv){
     vec3 col = vec3(0.1451, 0.0078, 0.0078);
 
     if(d_m.y==1.0){//head
-        col=vec3(p.y*2., 1.0706, 0.0706);
-        col=vec3(0.0275, 0.7647, 0.9451);
-        col=oklab_mix(vec3(0.1216, 0.6235, 0.6392), vec3(0.9529, 0.1882, 0.4824),p.y*2.+0.5);
-        col=abs(vec3(
+        
+        if(head_pattern==0.){
+            col=abs(vec3(
         (cos(p.y*5.+(u_time*.5)*1.5)),
         (cos(p.y*5.+(u_time*1.5)*1.5)),
         (cos(p.y*1.+(u_time*.5)*1.5))));
-        
+        }
+        if(head_pattern==1.){
+            col=vec3(0.075, 0.7647, 0.95);
+
+        }
+        if(head_pattern==2.){
+            col=vec3(p.y*2., 1.0706, 0.0706);
+        }
+        //gradient y
+        if(head_pattern==3.){
+            col=oklab_mix(vec3(0.1216, 0.6235, 0.6392), vec3(0.9529, 0.1882, 0.4824),p.y*2.+0.5);
+        }
+        if(head_pattern==4.){
+            col=vec3(
+            cos(p.y*23.-p.x*23.+(u_time*1.1)*TAU), 
+            cos(p.y*23.-p.x*23.+(u_time*1.)*TAU), 
+            cos(p.y*23.-p.x*23.+(u_time*5.)*TAU));
+        }
+
+
         // float c = length(p.xy)-.1;
         if(p.z>0.){
             vec2 po = getNormal(p).xy;
@@ -311,6 +332,18 @@ vec3 getColor(vec2 uv){
                 po = po*rotate2d(TAU*u_time*.2);
                 iris = box(po,vec2(.18*iris_scale*eye_size,.18*iris_scale*eye_size));
             }
+            //circle pulsing
+            if(eye_variant==3.){
+                iris = length(po)-.25*iris_scale*eye_size*(.5+sin(u_time*30.)*.25);
+            }
+            //hor rect
+            if(eye_variant==4.){
+                iris = box(po,vec2(.18*iris_scale*eye_size,.1*iris_scale*eye_size));
+            }
+            //vert rect
+            if(eye_variant==5.){
+                iris = box(po,vec2(.1*iris_scale*eye_size,.2*iris_scale*eye_size));
+            }
             float mouth = box(po2,vec2(.1,.02));
 
             whites = 1.0-smoothstep(0.,.01,whites);
@@ -334,54 +367,35 @@ vec3 getColor(vec2 uv){
     }
     //body
     if(d_m.y==2.0){
-        // col=specular*vec3(0.0667, 0.6627, 0.8118)*110.;     
+        col=vec3(0.9412, 0.8902, 0.9176);
+        //diagonal
+        if(head_pattern==.0){
+            col=vec3(
+            cos(p.y*23.+p.x*23.+(u_time*5.1)*TAU), 
+            cos(p.y*23.+p.x*23.+(u_time*5.)*TAU), 
+            cos(p.y*23.+p.x*23.+(u_time*5.)*TAU));
+        }
+        //gradient y
+        if(body_pattern==1.0){
+            col=oklab_mix(vec3(0.0392, 0.2549, 0.8549), vec3(0.0118, 0.6667, 0.6353),p.y*3.+3.0);
 
-        col=vec3(0.8863, 0.251, 0.251)*abs(getNormal(p)+.7).y;
-        // col=vec3(p.y*1.1, 1.0706, 0.0706);
-        col=vec3(0.2863, 0.0314, 0.1725);
-
-        // col=oklab_mix(vec3(0.8941, 0.0353, 0.0353), vec3(0.2471, 0.3922, 0.7922),p.y*3.+.5);
-        col=vec3(cos(p.y*33.-u_time*5.), cos(p.y*33.+u_time*2.), cos(p.y*33.+u_time*4.));
-        col=vec3(
-        cos(p.y*3.+sin(u_time*1.)*TAU), 
-        cos(p.y*3.+sin(u_time*1.)*TAU), 
-        cos(p.y*3.+sin(u_time*1.)*TAU));
-        col=vec3(
-        cos(p.y*83.+rand(vec2(u_time,1.))*TAU));
-        col=vec3(
-        cos(p.y*23.+p.x*23.+(u_time*1.1)*TAU), 
-        cos(p.y*23.+p.x*23.+(u_time*1.)*TAU), 
-        cos(p.y*23.+p.x*23.+(u_time*1.)*TAU));
-
+        }
+        //stripes horizontal
+        if(body_pattern==2.0){
+            float cc = sin(p.y*33.+u_time*15.)-.8;
+            cc = smoothstep(0.,0.1,cc);
+            col=vec3(0., cc, cc);
+        }
+        if(body_pattern==3.0){
+            col=oklab_mix(vec3(0.8549, 0.0392, 0.2157), vec3(0.0118, 0.6667, 0.6353),p.y*3.+3.0);
+        }
+        if(body_pattern==4.0){
+            col=abs(getNormal(p)+.7);
+        }
     }
-    if(d_m.y==3.0){
-        col=vec3(0.0, 0.0, 0.0);
-        col=vec3(cos(p.y*22.+u_time), cos(p.y*22.+u_time*2.), cos(p.y*22.+u_time*4.));
-        col=oklab_mix(vec3(0.8549, 0.0392, 0.2157), vec3(0.0118, 0.6667, 0.6353),p.y*3.+3.0);
-
-        // col=vec3(sin(length((p+vec3(0,.5,0))*32.+u_time)), 0, 0);
-        // col=mix(vec3(0.0039, 0.0196, 0.0118), vec3(0.6784, 0.102, 0.2275),sin(p.y*32.)+1.5);
-    }
-    if(d_m.y==4.0){
-        col=vec3(cos(p.y*33.+u_time*15.), cos(p.y*33.+u_time*12.), cos(p.y*33.+u_time*14.));
-        float cc = sin(p.y*33.+u_time*15.)-.8;
-        cc = smoothstep(0.,0.1,cc);
-        col=vec3(cos(p.y*33.+u_time*15.), cos(p.y*33.+u_time*12.), cos(p.y*33.+u_time*14.));
-        col=vec3(0., cc, cc);
-        col=oklab_mix(vec3(0.0392, 0.2549, 0.8549), vec3(0.0118, 0.6667, 0.6353),p.y*3.+3.0);
-
-
-    }
-    // col=dif1*light1;//+dif2*light2+dif3;//+specular*vec3(0.9922, 0.9922, 0.9922);
-    // col = getNormal(p);
-
     //background
     if(d_m.x>3.){
-        // vec3 col2=mix(vec3(0.1608, 0.0, 0.0627),vec3(0.7529, 0.7882, 0.2353),
-        // pow(abs(uv.y),1.+.5*sin(u_time)));
-        // col=mix(col,col2,.9);
         float gr = length(uv*.5);
-        // gr=pow(gr,.1);
         col=oklab_mix(vec3(0.1412, 0.6549, 0.8941),vec3(0.102, 0.0039, 0.0157),gr);
     }
     
@@ -391,7 +405,7 @@ vec3 getColor(vec2 uv){
     float startDist = 1.1;
     float fogAmount = 1.0 - exp(-d_m.x * (1.0/startDist));
     //1.0-exp( -0.0001*d*d*d )
-    // col=mix(col,vec3(0.3725, 0.6196, 0.0471),fogAmount);
+    //  col=mix(col,vec3(0.9882, 0.9882, 0.9882),fogAmount);
     return col; 
 }
 void main() {    
