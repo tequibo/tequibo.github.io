@@ -181,11 +181,11 @@ function onTouchUp(event){
   rotation_hor_prev = rotation_hor;
 }
 canvas.addEventListener( 'mousemove', onMouseMove, false );
-canvas.addEventListener( 'touchmove', onMouseMove, false );
-canvas.addEventListener( 'touchstart', onTouch);
+// canvas.addEventListener( 'touchmove', onMouseMove, false );
+// canvas.addEventListener( 'touchstart', onTouch);
 canvas.addEventListener( 'mousedown', onTouch);
 canvas.addEventListener( 'mouseup', onTouchUp);
-canvas.addEventListener( 'touchend', onTouchUp);
+// canvas.addEventListener( 'touchend', onTouchUp);
 draw(0);
 
 function rr(min, max){
