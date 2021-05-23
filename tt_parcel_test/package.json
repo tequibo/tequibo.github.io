@@ -1,0 +1,22 @@
+{
+  "name": "tt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ccapture.js": "^1.1.0",
+    "dat.gui": "^0.7.7",
+    "simplex-noise": "^2.4.0",
+    "three": "^0.128.0"
+  },
+  "devDependencies": {
+    "cssnano": "^5.0.3",
+    "postcss": "^8.2.15"
+  }
+}

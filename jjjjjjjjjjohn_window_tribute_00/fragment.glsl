@@ -2,7 +2,8 @@ varying vec2 vUv;
 uniform float u_time;
 uniform sampler2D uTexture;
 uniform float u_scale;
-uniform vec3 u_color1;
+vec3 u_color1 = vec3(0.93, 0, 0.34);
+vec3 u_color2 = vec3(0.04, 0.78, 0.96);
 float box(vec2 p, vec2 R){
     float d = length(max(abs(p)-R,0.));
     return d;
@@ -38,6 +39,10 @@ float easeElasticOut(float t) {
     float s = p / 4.0;
     return (a * pow(2.0, -10.0 * t) * sin((t - s) * TAU / p) + 1.0);
 }
+float easeCubicInOut(float t) {
+    t = t * 2.0; if (t < 1.0) return 0.5 * t * t * t;
+    return 0.5 * ((t -= 2.0) * t * t + 2.0);
+}
 /* Boolean functions */
 float sUnion(float a, float b) {
     return min(a, b);
@@ -55,26 +60,26 @@ void main() {
   float d = 1.;
   float d2 = 1.;
   vec3 color = vec3(0);;
-  totalTime(4.5);
-  if(between(.25)){
-    v = easeCubicOut(animation.pow);
+  totalTime(2.);
+  if(between(.5)){
+    v = easeCubicInOut(animation.pow);
     d = sRect(uv,vec2(s+v*(1.-s),s+v*(1.-s)));
     d2 = sRect(uv,vec2(s*v,s*v));
     d=sDifference(d,d2);
   }
-  if(between(2.)){
+  if(between(.5)){
     d = sRect(uv,vec2(s,s));
     d=-d;
 
   }
-  if(between(.25)){
-    v = easeCubicOut(animation.pow);
+  if(between(.5)){
+    v = easeCubicInOut(animation.pow);
     d = sRect(uv,vec2(s+v*(1.-s),s+v*(1.-s)));
     d2 = sRect(uv,vec2(s*v,s*v));
     d=sDifference(d,d2);
     d=-d;
   }
-  if(between(2.)){
+  if(between(.5)){
     d = sRect(uv,vec2(s,s));
     // d=-d;
   }
@@ -84,7 +89,8 @@ void main() {
   //  d=1.-d;
 //   vec4 color = texture2D(uTexture, uv);
   color = vec3(d,d,d);
-  // color = mix(u_color1,vec3(0.0392, 0.0, 0.0),d);
-  // color = mix(vec3(0.0, 0.0, 0.0),vec3(0.4745, 0.0471, 0.8745),d);
+  color = mix(u_color1,u_color2,u_scale);
+  // color = mix(mix(vec3(0.0, 0.0, 0.0),vec3(1),u_scale),color,d);
+  color = mix(vec3(0),color,d);
   gl_FragColor = vec4(color,1.);
 }

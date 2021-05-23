@@ -1,7 +1,7 @@
 // Option 1: Import the entire three.js core library.
 import * as THREE from 'three';
-
-import { OrbitControls } from './node_modules/three/examples/jsm/controls/OrbitControls.js';
+// import CCapture from 'ccapture.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui';
 import { Color, OrthographicCamera, Vector3 } from 'three';
 // import * as SimplexNoise from 'simplex-noise';
