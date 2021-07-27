@@ -358,7 +358,7 @@ class ParticleSystem{
 
 let mousePos;  
 let mousePosPrev;
-let mousePosMM
+let mousePosMM = {x:0, y:0};
 let lines = [];
 let currentLine;
 let mouseIsPressed=false;
@@ -376,7 +376,7 @@ function setup() {
   window.addEventListener("resize", resize); 
   canvas.addEventListener("touchstart", handleStart, false);
   canvas.addEventListener("touchend", handleEnd, false);
-  // canvas.addEventListener("touchcancel", handleCancel, false);
+  canvas.addEventListener("touchcancel", handleEnd, false);
   canvas.addEventListener("touchmove", handleMove, false);
 }
 function resize() {
