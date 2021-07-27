@@ -239,7 +239,7 @@ class Particle {
         this.max_spawn = rr(0,5);
         this.rotation = rr(0,TAU);
         this.rot_vel = rr(-.1,1)
-        this.special = rr(0,1)>.9?true:false;
+        this.special = rr(0,1)>.85?true:false;
         // this.attract = rr(0,1)>.7?true:false;
     }
 
@@ -265,6 +265,7 @@ class ParticleSystem{
   constructor(origin){   
     this.particles = [];    
     this.draw=false;   
+    this.lifetime = rr(5,20);
   }
 
   addParticle() {    
@@ -295,7 +296,7 @@ class ParticleSystem{
       // if (this.state != "creation") {
       //   p.run();      
       // } 
-      let rgb = HSVtoRGB(p.hue,1,1-p.life/5);
+      let rgb = HSVtoRGB(p.hue,1,1-p.life/this.lifetime);
       let v = new Vector(0,0);
       for (let i = 0; i<this.particles.length; i++) {
         let p2 = this.particles[i];
@@ -346,7 +347,7 @@ class ParticleSystem{
       
       
       p.life+=dt*.001;
-      if(p.life>5){
+      if(p.life>this.lifetime){
         this.particles.splice(i,1);
       }
     }
@@ -390,6 +391,8 @@ function resize() {
 function handleStart(evt) {  
   evt.preventDefault();
   var touches = evt.changedTouches;
+  mousePosMM.x = touches[0].pageX;
+  mousePosMM.y = touches[0].pageY;
   touched(new Vector(touches[0].pageX,touches[0].pageY));
 }
 function handleMove(evt) {
