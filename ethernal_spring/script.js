@@ -398,7 +398,7 @@ function handleStart(evt) {
 }
 function handleMove(evt) {
   evt.preventDefault();
-  color_hue+=.001;
+  color_hue+=.003;
   if(color_hue>1){
       color_hue=0;
   }
