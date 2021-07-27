@@ -239,7 +239,8 @@ class Particle {
         this.max_spawn = rr(0,5);
         this.rotation = rr(0,TAU);
         this.rot_vel = rr(-.1,1)
-        this.special = rr(0,1)>.85?true:false;
+        this.special = rr(0,1)>.9?true:false;
+        this.dist = rr(5,20);
         // this.attract = rr(0,1)>.7?true:false;
     }
 
@@ -304,9 +305,9 @@ class ParticleSystem{
           continue;
         }
         v = Vector.subtract(p.position, p2.position);
-        if(v.length()<20){
+        if(v.length()<p.dist){
           // console.log(v)
-          v.multiply(.001);
+          v.multiply(.003);
           if(false){
             p2.velocity.add(v);
             p.velocity.subtract(v);
@@ -369,8 +370,8 @@ function setup() {
   canvas = document.getElementById("canvas");
   ctx = canvas.getContext("2d");
 
-  canvas2 = document.getElementById("canvas2");
-  ctx2 = canvas2.getContext("2d");
+  // canvas2 = document.getElementById("canvas2");
+  // ctx2 = canvas2.getContext("2d");
   // ctx2.fillStyle='rgb(10,10,10)';
   // ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
   resize();
@@ -384,8 +385,8 @@ function resize() {
   w= canvas.width = window.innerWidth;
   h= canvas.height = window.innerHeight;
 
-  w = canvas2.width = window.innerWidth;
-  h = canvas2.height =window.innerHeight;
+  // w = canvas2.width = window.innerWidth;
+  // h = canvas2.height =window.innerHeight;
   //ctx.translate(w / 2, h / 2);
 }
 function handleStart(evt) {  
@@ -397,7 +398,7 @@ function handleStart(evt) {
 }
 function handleMove(evt) {
   evt.preventDefault();
-  color_hue+=.0005;
+  color_hue+=.001;
   if(color_hue>1){
       color_hue=0;
   }
