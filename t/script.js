@@ -374,9 +374,11 @@ function setup() {
   // ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
   resize();
   window.addEventListener("resize", resize); 
-
+  canvas.addEventListener("touchstart", handleStart, false);
+  // canvas.addEventListener("touchend", handleEnd, false);
+  // canvas.addEventListener("touchcancel", handleCancel, false);
+  // canvas.addEventListener("touchmove", handleMove, false);
 }
-
 function resize() {
   w= canvas.width = window.innerWidth;
   h= canvas.height = window.innerHeight;
@@ -385,6 +387,50 @@ function resize() {
   h = canvas2.height =window.innerHeight;
   //ctx.translate(w / 2, h / 2);
 }
+function handleStart(evt) {  
+  evt.preventDefault();
+  var touches = evt.changedTouches;
+  touched(new Vector(touches[0].pageX,touches[0].pageY));
+}
+function handleMove(evt) {
+  evt.preventDefault();
+  var touches = evt.changedTouches;
+  mousePosMM.x = touches[0].pageX;
+  mousePosMM.y = touches[0].pageY;
+}
+
+function handleEnd(evt) {
+  evt.preventDefault();
+  mouseIsPressed = false;
+}
+function touched(pos){
+  mouseIsPressed=true;
+  show_tip=false;
+  // console.log('Mouse position: ' + mousePos.x + ',' + mousePos.y);
+  let l = new ParticleSystem(pos);
+  lines.push(l);
+  currentLine=l; 
+}
+canvas.onmousemove = function(e){
+  // mousePosPrev = mousePos;
+  mousePosMM = getMousePos(canvas, e);
+  if(mouseIsPressed){
+      color_hue+=.0005;
+      if(color_hue>1){
+          color_hue=0;
+      }
+  }
+  
+}
+canvas.onmousedown = function(e){
+  touched(mousePos); 
+}
+canvas.onmouseup = function(e){
+  // console.log('Mouse position: ' + mousePos.x + ',' + mousePos.y);
+  currentLine.state="finished";
+  mouseIsPressed = false;
+}
+
 
 function getMousePos(canvas, e) {
   var rect = canvas.getBoundingClientRect();
@@ -434,28 +480,4 @@ function draw(e) {
 }
 setup();
 
-canvas.onmousemove = function(e){
-    // mousePosPrev = mousePos;
-    mousePosMM = getMousePos(canvas, e);
-    if(mouseIsPressed){
-        color_hue+=.0005;
-        if(color_hue>1){
-            color_hue=0;
-        }
-    }
-    
-}
-canvas.onmousedown = function(e){
-    mouseIsPressed=true;
-    show_tip=false;
-    // console.log('Mouse position: ' + mousePos.x + ',' + mousePos.y);
-    let l = new ParticleSystem(mousePos);
-    lines.push(l);
-    currentLine=l;  
-}
-canvas.onmouseup = function(e){
-    // console.log('Mouse position: ' + mousePos.x + ',' + mousePos.y);
-    currentLine.state="finished";
-    mouseIsPressed = false;
-}
 draw(1);
