@@ -307,7 +307,7 @@ class ParticleSystem{
         v = Vector.subtract(p.position, p2.position);
         if(v.length()<p.dist){
           // console.log(v)
-          v.multiply(.003);
+          v.multiply(.0035);
           if(false){
             p2.velocity.add(v);
             p.velocity.subtract(v);
