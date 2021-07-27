@@ -397,6 +397,10 @@ function handleStart(evt) {
 }
 function handleMove(evt) {
   evt.preventDefault();
+  color_hue+=.0005;
+  if(color_hue>1){
+      color_hue=0;
+  }
   var touches = evt.changedTouches;
   mousePosMM.x = touches[0].pageX;
   mousePosMM.y = touches[0].pageY;
