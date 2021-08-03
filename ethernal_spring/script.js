@@ -266,7 +266,7 @@ class ParticleSystem{
   constructor(origin){   
     this.particles = [];    
     this.draw=false;   
-    this.lifetime = rr(5,20);
+    this.lifetime = 5;//rr(5,20);
   }
 
   addParticle() {    
