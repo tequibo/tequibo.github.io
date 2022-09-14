@@ -12,6 +12,8 @@ let w,h;
 let side;
 let brush={};
 let size, str;
+let counter=0;
+let color;
 function resize() {
     w = canvas.width = window.innerWidth;
     h = canvas.height = window.innerHeight;
@@ -23,21 +25,23 @@ function setup() {
     ctx = canvas.getContext("2d");   
     window.addEventListener("resize", resize); 
     resize();
-    brush.x=w/2;
-    brush.y=h/2;
-    size=rr(10,200);
-    str=rr(0,30);
+    reset()
 }
 function draw(e) {
     
 	stats.begin();
-
+    counter++;
+    if(counter>300){
+        reset()
+        counter=0;
+    }
 	ctx.fillStyle='rgba(235,235,235,1)';
-    ctx.strokeStyle='rgba(235,'+rr(155,255)+','+rr(155,255)+',1)';
+    let r = rr(0,255)
+    ctx.strokeStyle='rgba('+r+','+r+','+r+',.5)';
     // ctx.fillRect(0, 0, canvas.width, canvas.height);
-    brush.x+=rr(-5,5); 
-    brush.y+=rr(-5,5); 
-    ctx.strokeRect(Math.floor(brush.x-size/2), Math.floor(brush.y-size/2),size,size); 
+    brush.x+=rr(-6,6); 
+    brush.y+=rr(-6,6); 
+    ctx.strokeRect(Math.floor(brush.x-size_w/2), Math.floor(brush.y-size_h/2),size_w,size_h); 
     // ctx.lineJoin = "round"
     ctx.lineWidth=str;
     // ctx.strokeStyle = 'rgb('+(.5+Math.sin(f*TAU+TAU*d1+t*.3)*.5)*255+','
@@ -49,6 +53,14 @@ function draw(e) {
 	stats.end();
     requestAnimationFrame(draw);
 
+}
+function reset(){
+    color='rgba('+rr(155,255)+','+rr(155,255)+','+rr(155,255)+','+rr(0,1)+')';
+    brush.x=w/2;
+    brush.y=h/2;
+    size_w=rr(1,w/2);
+    size_h=size_w;//rr(1,h);
+    str=rr(0,55);
 }
 setup();
 draw(1);
