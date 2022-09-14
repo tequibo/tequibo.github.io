@@ -26,7 +26,7 @@ function draw(e) {
     requestAnimationFrame(draw);
     ctx.fillStyle='rgba(235,235,235,1)';
     ctx.strokeStyle='rgba(235,'+rr(155,255)+','+rr(155,255)+',1)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // ctx.fillRect(0, 0, canvas.width, canvas.height);
     brush.x+=rr(-1,1); 
     brush.y+=rr(-1,1); 
     ctx.strokeRect(Math.floor(brush.x-50), Math.floor(brush.y-50),100,100); 
