@@ -28,20 +28,21 @@ function setup() {
     reset()
 }
 function draw(e) {
-    
-	stats.begin();
+    stats.begin();
+    const time = new Date();
     counter++;
     if(counter>300){
         reset()
         counter=0;
     }
 	ctx.fillStyle='rgba(235,235,235,1)';
-    let r = rr(0,255)
+    let r = quickNoise.noise(time.getMilliseconds()*.1,.21,.1)*10*255//rr(0,255)
     ctx.strokeStyle='rgba('+r+','+r+','+r+',.5)';
     // ctx.fillRect(0, 0, canvas.width, canvas.height);
-    brush.x+=rr(-6,6); 
-    brush.y+=rr(-6,6); 
-    ctx.strokeRect(Math.floor(brush.x-size_w/2), Math.floor(brush.y-size_h/2),size_w,size_h); 
+    console.log(quickNoise.noise(.1,.2,.1))
+    brush.x+=quickNoise.noise(time.getMilliseconds()*100,.21,.1)*40; 
+    brush.y+=quickNoise.noise(time.getMilliseconds()*100,.1,.411)*40; 
+    ctx.strokeRect(Math.floor((brush.x-size_w/2)/size_w)*size_w, Math.floor((brush.y-size_h/2)/size_h)*size_h,size_w,size_h); 
     // ctx.lineJoin = "round"
     ctx.lineWidth=str;
     // ctx.strokeStyle = 'rgb('+(.5+Math.sin(f*TAU+TAU*d1+t*.3)*.5)*255+','
