@@ -158,3 +158,24 @@ footer {
 .swiper-pagination-bullet-active{
     opacity: 100%;
 }
+
+.save-container {
+  position: relative;
+}
+
+#popup {
+  display: none;
+  position: absolute;
+  top: -40px; /* Adjust this value based on your design */
+  right: 50%;
+  padding: 10px;
+  background-color: #333;
+  color: #fff;
+  border-radius: 5px;
+  animation: fadeOut 2s;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}

@@ -27,8 +27,6 @@
 <div class="swiper-wrapper">
 <div class="swiper-slide"><img src="../loops/loop_3x33.gif" alt="photo"></div>
 <div class="swiper-slide"><img src="../loops/loop - Copy (2).gif" alt="photo"></div>
-<div class="swiper-slide"><img src="../loops/loop.gif" alt="photo"></div>
-<div class="swiper-slide"><img src="../loops/rgb_circles.gif" alt="photo"></div>
 <div class="swiper-slide"><img src="../loops/loop_44x4_blue.gif" alt="photo"></div>
 <div class="swiper-slide"><img src="../loops/ruby loop.gif" alt="photo"></div>
 </div>
@@ -67,8 +65,21 @@
           },
       });
   </script>
-  <footer>
-    <p>🤓</p>
-  </footer>
+   
+<footer>
+  <div class="save-container">
+    <p id="saveButton">💾</p>
+    <div id="popup">SAVED</div>
+  </div>
+</footer>
 </body>
+<script>
+  document.getElementById("saveButton").addEventListener("click", function() {
+  document.getElementById("popup").style.display = "block";
+  setTimeout(function() {
+    console.log("game saved succesfully");
+    document.getElementById("popup").style.display = "none";
+  }, 2000); // 2000 milliseconds = 2 seconds
+});
+  </script>
 </html>

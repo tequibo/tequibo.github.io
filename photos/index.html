@@ -26,16 +26,9 @@
 <div class="swiper-container">
 <div class="swiper-wrapper">
 <div class="swiper-slide"><img src="../photos/IMG_1281.jpeg" alt="photo"></div>
-<div class="swiper-slide"><img src="../photos/2024-03-06 19.41.57.jpg" alt="photo"></div>
-<div class="swiper-slide"><img src="../photos/2024-03-06 19.42.37.jpg" alt="photo"></div>
 <div class="swiper-slide"><img src="../photos/IMG_0922.jpeg" alt="photo"></div>
-<div class="swiper-slide"><img src="../photos/2024-03-06 19.43.00.jpg" alt="photo"></div>
 <div class="swiper-slide"><img src="../photos/2024-03-06 19.42.57.jpg" alt="photo"></div>
-<div class="swiper-slide"><img src="../photos/2024-03-06 19.42.43.jpg" alt="photo"></div>
-<div class="swiper-slide"><img src="../photos/2024-03-06 19.43.03.jpg" alt="photo"></div>
 <div class="swiper-slide"><img src="../photos/2024-03-06 19.42.47.jpg" alt="photo"></div>
-<div class="swiper-slide"><img src="../photos/2024-03-06 19.42.53.jpg" alt="photo"></div>
-<div class="swiper-slide"><img src="../photos/2024-03-06 19.43.06.jpg" alt="photo"></div>
 <div class="swiper-slide"><img src="../photos/IMG_0387.jpeg" alt="photo"></div>
 <div class="swiper-slide"><img src="../photos/2024-03-06 19.42.51.jpg" alt="photo"></div>
 </div>
@@ -74,8 +67,21 @@
           },
       });
   </script>
-  <footer>
-    <p>🤓</p>
-  </footer>
+   
+<footer>
+  <div class="save-container">
+    <p id="saveButton">💾</p>
+    <div id="popup">SAVED</div>
+  </div>
+</footer>
 </body>
+<script>
+  document.getElementById("saveButton").addEventListener("click", function() {
+  document.getElementById("popup").style.display = "block";
+  setTimeout(function() {
+    console.log("game saved succesfully");
+    document.getElementById("popup").style.display = "none";
+  }, 2000); // 2000 milliseconds = 2 seconds
+});
+  </script>
 </html>

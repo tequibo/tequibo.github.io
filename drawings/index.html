@@ -30,7 +30,6 @@
 <div class="swiper-slide"><img src="../drawings/moon_phone.jpeg" alt="photo"></div>
 <div class="swiper-slide"><img src="../drawings/Untitled_Artwork.jpg" alt="photo"></div>
 <div class="swiper-slide"><img src="../drawings/death.png" alt="photo"></div>
-<div class="swiper-slide"><img src="../drawings/hi.jpeg" alt="photo"></div>
 </div>
 <!-- Add pagination -->
 <div class="swiper-pagination"></div>
@@ -67,8 +66,21 @@
           },
       });
   </script>
-  <footer>
-    <p>🤓</p>
-  </footer>
+   
+<footer>
+  <div class="save-container">
+    <p id="saveButton">💾</p>
+    <div id="popup">SAVED</div>
+  </div>
+</footer>
 </body>
+<script>
+  document.getElementById("saveButton").addEventListener("click", function() {
+  document.getElementById("popup").style.display = "block";
+  setTimeout(function() {
+    console.log("game saved succesfully");
+    document.getElementById("popup").style.display = "none";
+  }, 2000); // 2000 milliseconds = 2 seconds
+});
+  </script>
 </html>
