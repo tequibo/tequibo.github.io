@@ -1,0 +1,160 @@
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
+header {
+  text-align: left;
+}
+.menu-link {
+  padding:10px;
+  text-decoration: none; /* Remove underline */
+  color: #333; /* Change color to a desired value */
+}
+h1 {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.project-section {
+  margin-bottom: 20px;
+}
+
+.project-section img {
+  width: 100%;
+  height: auto;
+  /* Maintain aspect ratio */
+  margin-bottom: 10px;
+}
+
+
+.swiper-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.swiper-wrapper {
+  display: flex;
+  /* Ensure the wrapper uses flex layout */
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+  /* Center slide text vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 0 0 100%;
+  /* Ensure the slides take up 100% of the container width */
+}
+
+img {
+  width: auto;
+  /* Let the width adjust automatically to maintain aspect ratio */
+  height: 700px;
+  /* Set the height to 100% of the container */
+  display: block;
+  /* Prevent extra space below inline images */
+  margin: 0 auto;
+  /* Center the images horizontally */
+}
+
+/* Add custom arrow icons to the navigation buttons */
+.swiper-button-prev,
+/* Add emoji hands as content for the navigation buttons */
+.custom-prev-button,
+.custom-next-button {
+  font-size: 34px;
+  /* Set the font size */
+  color: #000;
+  /* Set the color of the icons */
+  background-color: transparent;
+  /* Set the background color to transparent */
+  border: none;
+  /* Remove the border */
+  outline: none;
+  /* Remove the outline */
+  cursor: pointer;
+  /* Set cursor to pointer */
+  padding: 10px;
+  /* Add padding to the buttons */
+
+  position: fixed;
+  /* Set the position to fixed */
+  top: 50%;
+  /* Position the elements vertically centered */
+  transform: translateY(-50%);
+  /* Adjust the vertical position to center the elements */
+  width: 50px;
+  /* Set the width of the buttons */
+  text-align: center;
+  /* Align the content to the center */
+  font-size: 24px;
+  /* Set the font size */
+  color: #000;
+  /* Set the color of the icons */
+  z-index: 1000;
+  /* Set the z-index to ensure the buttons appear above other content */
+}
+
+.custom-next-button {
+  right: 20px;
+  padding: 10%;
+  width: auto;
+  /* Position the next button 20px from the right edge */
+}
+
+.custom-prev-button {
+  left: 20px;
+  padding: 10%;
+
+  /* Position the previous button 20px from the left edge */
+}
+
+.swiper-pagination {
+  /* top: 80px; */
+  padding: 10px;
+  position: relative;
+
+}
+
+.swiper-pagination-bullet {
+  width: 20px;
+  /* height: 20px; */
+  /* padding: 3px; */
+  background: #ffffff;
+  opacity: 80%;
+  display:inline;
+
+}
+
+.swiper-pagination-bullet:after {
+  /* Unicode for the smiling face emoji */
+  display: inline-block;
+  font-size: 15px;
+  /* margin: 0 15px;  */
+  text-align: center;
+  content: "✊";
+}
+.swiper-pagination-bullet-active:after {
+  content: "☝️";
+  /* Unicode for the smiling face emoji */
+  display: inline-block;
+  font-size: 25px;
+  /* margin: 0 15px;  */
+  text-align: center;
+}
+
+footer {
+  padding: 10px;
+  position: relative;
+  text-align: center;
+}
+
+.swiper-pagination-bullet-active{
+    opacity: 100%;
+}

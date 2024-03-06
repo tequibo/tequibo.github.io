@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="/bundle.css">
+
+  <title>photos</title>
+  <!-- Add your CSS and other meta tags here -->
+</head>
+<body>
+  <header>
+    <nav>
+      <h4>
+        <a href="/" class="menu-link">Home</a> 
+        <a href="/drawings" class="menu-link">Drawings</a> 
+        <a href="/photos" class="menu-link">Photos</a> 
+        <!-- <a href="/interactive" class="menu-link">Interactive</a>  -->
+        <a href="/loops" class="menu-link">Loops</a> 
+        <!-- <a href="/games" class="menu-link">Games</a>  -->
+      </h2>
+    </nav>
+  </header>
+    <h1>photos</h1>
+<div class="swiper-container">
+<div class="swiper-wrapper">
+<div class="swiper-slide"><img src="../photos/IMG_1281.jpeg" alt="photo"></div>
+<div class="swiper-slide"><img src="../photos/2024-03-06 19.41.57.jpg" alt="photo"></div>
+<div class="swiper-slide"><img src="../photos/2024-03-06 19.42.37.jpg" alt="photo"></div>
+<div class="swiper-slide"><img src="../photos/IMG_0922.jpeg" alt="photo"></div>
+<div class="swiper-slide"><img src="../photos/2024-03-06 19.43.00.jpg" alt="photo"></div>
+<div class="swiper-slide"><img src="../photos/2024-03-06 19.42.57.jpg" alt="photo"></div>
+<div class="swiper-slide"><img src="../photos/2024-03-06 19.42.43.jpg" alt="photo"></div>
+<div class="swiper-slide"><img src="../photos/2024-03-06 19.43.03.jpg" alt="photo"></div>
+<div class="swiper-slide"><img src="../photos/2024-03-06 19.42.47.jpg" alt="photo"></div>
+<div class="swiper-slide"><img src="../photos/2024-03-06 19.42.53.jpg" alt="photo"></div>
+<div class="swiper-slide"><img src="../photos/2024-03-06 19.43.06.jpg" alt="photo"></div>
+<div class="swiper-slide"><img src="../photos/IMG_0387.jpeg" alt="photo"></div>
+<div class="swiper-slide"><img src="../photos/2024-03-06 19.42.51.jpg" alt="photo"></div>
+</div>
+<!-- Add pagination -->
+<div class="swiper-pagination"></div>
+<div class="custom-next-button">
+👉
+</div>
+<!-- Custom previous button -->
+<div class="custom-prev-button">
+👈
+</div>
+</div> <!-- This will be replaced with the content of each page -->
+  <!-- Add your footer and scripts here -->
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <script>
+      const swiper = new Swiper('.swiper-container', {
+          // Optional parameters
+          direction: 'horizontal',
+          loop: true,
+
+          // Enable pagination
+          // Enable pagination with customized bullets
+          pagination: {
+              el: '.swiper-pagination', // CSS selector for the pagination container
+              clickable: true, // Enable clickable pagination bullets
+              renderBullet: function (index, className) {
+                  return '<span class="' + className + '"></span>'; // Customize the content of the pagination bullets
+  },
+          },
+
+          // Navigation arrows
+          navigation: {
+              nextEl: '.custom-next-button', // CSS selector for the next button
+              prevEl: '.custom-prev-button', // CSS selector for the previous button
+          },
+      });
+  </script>
+  <footer>
+    <p>🤓</p>
+  </footer>
+</body>
+</html>

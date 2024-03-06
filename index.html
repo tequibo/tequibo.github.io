@@ -1,18 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset='utf-8'>
-	<meta name='viewport' content='width=device-width,initial-scale=1'>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="/bundle.css">
 
-	<title>Svelte app</title>
-
-	<link rel='icon' type='image/png' href='/favicon.png'>
-	<link rel='stylesheet' href='/global.css'>
-	<link rel='stylesheet' href='/build/bundle.css'>
-
-	<script defer src='/build/bundle.js'></script>
+  <title>Home</title>
+  <!-- Add your CSS and other meta tags here -->
 </head>
-
 <body>
+  <header>
+    <nav>
+      <h4>
+        <a href="/" class="menu-link">Home</a> 
+        <a href="/drawings" class="menu-link">Drawings</a> 
+        <a href="/photos" class="menu-link">Photos</a> 
+        <!-- <a href="/interactive" class="menu-link">Interactive</a>  -->
+        <a href="/loops" class="menu-link">Loops</a> 
+        <!-- <a href="/games" class="menu-link">Games</a>  -->
+      </h2>
+    </nav>
+  </header>
+    <h1>Web Home Page of Sasha T.</h1>
+ <header>
+    <h1></h1>
+    <p>Hello, dear visitor! Welcome to my Web Page.  </p>
+  </header> <!-- This will be replaced with the content of each page -->
+  <!-- Add your footer and scripts here -->
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <script>
+      const swiper = new Swiper('.swiper-container', {
+          // Optional parameters
+          direction: 'horizontal',
+          loop: true,
+
+          // Enable pagination
+          // Enable pagination with customized bullets
+          pagination: {
+              el: '.swiper-pagination', // CSS selector for the pagination container
+              clickable: true, // Enable clickable pagination bullets
+              renderBullet: function (index, className) {
+                  return '<span class="' + className + '"></span>'; // Customize the content of the pagination bullets
+  },
+          },
+
+          // Navigation arrows
+          navigation: {
+              nextEl: '.custom-next-button', // CSS selector for the next button
+              prevEl: '.custom-prev-button', // CSS selector for the previous button
+          },
+      });
+  </script>
+  <footer>
+    <p>🤓</p>
+  </footer>
 </body>
 </html>
