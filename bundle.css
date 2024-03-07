@@ -53,16 +53,22 @@ h1 {
 }
 
 img {
-  width: auto;
-  /* Let the width adjust automatically to maintain aspect ratio */
-  height: 700px;
-  /* Set the height to 100% of the container */
-  display: block;
-  /* Prevent extra space below inline images */
-  margin: 0 auto;
-  /* Center the images horizontally */
+  max-width: 100%;
+  height: auto;
+  max-height: 80vh;
 }
-
+/* @media (min-width: 1000px) {
+  img {
+    max-width: 1000px; 
+    height: auto;
+  }
+} */
+@media (max-width: 768px) {
+  img {
+    max-width: 80%;
+    height: auto;
+  }
+}
 /* Add custom arrow icons to the navigation buttons */
 .swiper-button-prev,
 /* Add emoji hands as content for the navigation buttons */
@@ -102,15 +108,15 @@ img {
 }
 
 .custom-next-button {
-  right: 20px;
-  padding: 10%;
+  right: 10px;
+  padding: 2%;
   width: auto;
   /* Position the next button 20px from the right edge */
 }
 
 .custom-prev-button {
-  left: 20px;
-  padding: 10%;
+  left: 10px;
+  padding: 2%;
 
   /* Position the previous button 20px from the left edge */
 }
