@@ -70,17 +70,33 @@
 <footer>
   <div class="save-container">
     <p id="saveButton">💾</p>
-    <div id="popup">SAVED</div>
+    <div id="popup">GAME SAVED</div>
   </div>
 </footer>
 </body>
 <script>
-  document.getElementById("saveButton").addEventListener("click", function() {
-  document.getElementById("popup").style.display = "block";
-  setTimeout(function() {
-    console.log("game saved succesfully");
-    document.getElementById("popup").style.display = "none";
-  }, 2000); // 2000 milliseconds = 2 seconds
+  const phrases = [
+  "Game saved successfully",
+  "Save successful",
+  "You did good",
+  "Progress saved",
+  "CLICK!",
+  "☺️",
+  "HEALTH 100%",
+];
+let isSaving = false; // Track if a save operation is in progress
+
+document.getElementById("saveButton").addEventListener("click", function() {
+  if (!isSaving) { // Check if a save operation is not in progress
+    isSaving = true; // Set the flag to indicate a save operation is in progress
+    document.getElementById("popup").style.display = "block";
+    const randomIndex = Math.floor(Math.random() * phrases.length); // Generate a random index
+    document.getElementById("popup").innerText = phrases[randomIndex]; // Set the random phrase
+    setTimeout(function() {
+      document.getElementById("popup").style.display = "none";
+      isSaving = false; // Reset the flag once the save operation is complete
+    }, 5000); // 2000 milliseconds = 2 seconds
+  }
 });
   </script>
 </html>

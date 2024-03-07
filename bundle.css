@@ -181,12 +181,15 @@ footer {
   display: none;
   position: absolute;
   top: -40px; /* Adjust this value based on your design */
-  right: 50%;
+  left: 50%;
   padding: 10px;
+  transform: translate(-50%, 40%);
   background-color: #333;
   color: #fff;
   border-radius: 5px;
-  animation: fadeOut 2s;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  animation: fadeOut 5s;
+  z-index: 1000;
 }
 
 @keyframes fadeOut {
