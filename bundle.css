@@ -167,8 +167,16 @@ footer {
 
 .save-container {
   position: relative;
-}
+  
 
+}
+#saveButton{
+  width:80px;
+  /* right: 50%; */
+  display: inline-block;
+
+  cursor: pointer;
+}
 #popup {
   display: none;
   position: absolute;
