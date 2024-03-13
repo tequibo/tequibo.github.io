@@ -16,6 +16,10 @@ h1 {
   font-size: 2em;
   margin-bottom: 10px;
 }
+h3 {
+  font-size: 2em;
+  text-align: center;
+}
 
 .project-section {
   margin-bottom: 20px;
@@ -109,14 +113,14 @@ img {
 
 .custom-next-button {
   right: 10px;
-  padding: 2%;
+  /* padding: 2%; */
   width: auto;
   /* Position the next button 20px from the right edge */
 }
 
 .custom-prev-button {
-  left: 10px;
-  padding: 2%;
+  left: 5px;
+  /* padding: 2%; */
 
   /* Position the previous button 20px from the left edge */
 }
@@ -188,7 +192,7 @@ footer {
   color: #fff;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  animation: fadeOut 5s;
+  animation: fadeOut 2s;
   z-index: 1000;
 }
 
