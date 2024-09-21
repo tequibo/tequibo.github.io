@@ -13,33 +13,33 @@
   <header>
     <nav>
       <h4>
-        <!-- <a href="/" class="menu-link">Home</a>  -->
+        <a href="/" class="menu-link">Home</a> 
         <a href="/drawings" class="menu-link">Drawings</a> 
-        <a href="/photos" class="menu-link">Photos</a> 
+        <!-- <a href="/photos" class="menu-link">Photos</a>  -->
         <!-- <a href="/interactive" class="menu-link">Interactive</a>  -->
         <a href="/loops" class="menu-link">Loops</a> 
         <!-- <a href="/games" class="menu-link">Games</a>  -->
       </h2>
     </nav>
   </header>
-     <h3>loops</h3> 
-<div class="swiper-container">
-<div class="swiper-wrapper">
-<div class="swiper-slide"><img src="../loops/loop_3x33.gif" alt="photo"></div>
-<div class="swiper-slide"><img src="../loops/loop - Copy (2).gif" alt="photo"></div>
-<div class="swiper-slide"><img src="../loops/loop_44x4_blue.gif" alt="photo"></div>
-<div class="swiper-slide"><img src="../loops/ruby loop.gif" alt="photo"></div>
+    <h3>loops</h3>
+<div class="image-container">
+  <img src="../loops/loop_3x33.gif" alt="loop">
+  <!-- <img src="../loops/loop_44x4_blue.gif" alt="loop"> -->
+  <img src="../loops/ruby loop.gif" alt="loop">
 </div>
-<!-- Add pagination -->
-<div class="swiper-pagination"></div>
-<div class="custom-next-button">
-👉
-</div>
-<!-- Custom previous button -->
-<div class="custom-prev-button">
-👈
-</div>
-</div> <!-- This will be replaced with the content of each page -->
+<style>
+  .image-container {
+    text-align: center;
+  }
+
+  .image-container img {
+    display: block;
+    margin: 20px auto;
+    padding: 10px;
+  }
+</style>
+ <!-- This will be replaced with the content of each page -->
   <!-- Add your footer and scripts here -->
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
   <script>
@@ -75,14 +75,8 @@
 </body>
 <script>
   const phrases = [
-  "SAVED",
-  "I'm lost",
-  "remember floppy disks?",
-  "if only I could reload from this moment later",
-  "I'm sorry",
-  "☺️",
-  "Good luck!",
-  "I forgot my password"
+  "GAME SAVED",
+  // "☺️",
 ];
 let isSaving = false; // Track if a save operation is in progress
 
