@@ -1,86 +1,600 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-  <link rel="stylesheet" href="/bundle.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sasha T. (tequibo) | Minimal Portfolio</title>
+    <style>
+        :root {
+            --text-color: #333;
+            --accent-color: #ff3b30;
+            --background-color: #fff;
+            --border-color: #eaeaea;
+            --hover-alpha: 0.7;
+            --gif-button-color: #4a90e2;
+            --objkt-button-color: #50e3c2;
+        }
 
-  <title>Home</title>
-  <!-- Add your CSS and other meta tags here -->
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            font-size: 1rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            image-rendering: pixelated;
+        }
+
+        .big-header {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+
+        .intro {
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 3rem 0 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--text-color);
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            transition: all 0.2s ease;
+            border: 2px solid var(--text-color);
+            background: white;
+        }
+
+        .card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 8px 8px 0 var(--text-color);
+        }
+
+        .project-image {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 0.75rem;
+            transition: opacity 0.2s ease;
+            object-fit: cover;
+            image-rendering: pixelated;
+            border-bottom: 2px solid var(--text-color);
+        }
+
+        .card:hover .project-image {
+            opacity: var(--hover-alpha);
+        }
+
+        .project-info {
+            padding: 0.75rem;
+        }
+
+        .project-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            font-size: 1.1rem;
+        }
+
+        .project-year {
+            color: #999;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-links {
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            position: relative;
+            display: inline-block;
+            padding: 2px 4px;
+            background: #fff;
+            border: 1px solid var(--accent-color);
+        }
+
+        .link:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .gif-link, .objkt-link {
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            position: relative;
+            display: inline-block;
+            padding: 2px 4px;
+            background: white;
+            border: 1px solid;
+        }
+
+        .gif-link {
+            color: var(--gif-button-color);
+            border-color: var(--gif-button-color);
+        }
+
+        .objkt-link {
+            color: var(--objkt-button-color);
+            border-color: var(--objkt-button-color);
+        }
+
+        .gif-link:hover {
+            background: var(--gif-button-color);
+            color: white;
+        }
+
+        .objkt-link:hover {
+            background: var(--objkt-button-color);
+            color: white;
+        }
+
+        footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--text-color);
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .placeholder {
+            width: 100%;
+            height: 200px;
+            background-color: #f9f9f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            image-rendering: pixelated;
+            border-bottom: 2px solid var(--text-color);
+        }
+
+        .pixel-art {
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1.25rem;
+            }
+            
+            .big-header {
+                font-size: 2rem;
+            }
+            
+            .project-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            h2 {
+                margin: 2.5rem 0 1.25rem;
+            }
+        }
+    </style>
 </head>
+
 <body>
-  <header>
-    <nav>
-      <h4>
-        <a href="/" class="menu-link">Home</a> 
-        <a href="/drawings" class="menu-link">Drawings</a> 
-        <!-- <a href="/photos" class="menu-link">Photos</a>  -->
-        <!-- <a href="/interactive" class="menu-link">Interactive</a>  -->
-        <a href="/loops" class="menu-link">Loops</a> 
-        <!-- <a href="/games" class="menu-link">Games</a>  -->
-      </h2>
-    </nav>
-  </header>
     <header>
-  Sasha T.
-</header>
-this is my page
-<!-- <canvas id=canvas width=900 height=900 style="position: absolute; left: 0; top: 0; z-index: -5;"></canvas>   
-  <canvas id=canvas2 width=900 height=900 style="position: absolute; left: 0; top: 0; z-index: -10; background-color: rgb(255, 255, 255);">  </canvas>
-<p><script type="text/javascript" src="script.js"></script> --&gt;</p>
- <!-- This will be replaced with the content of each page -->
-  <!-- Add your footer and scripts here -->
-  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-  <script>
-      const swiper = new Swiper('.swiper-container', {
-          // Optional parameters
-          direction: 'horizontal',
-          loop: true,
+        <h1 class="big-header">Sasha Tabakov</h1>
+        <div class="intro">
+            Hi, I'm Sasha T. aka tequibo<br>
+            I make interactive art, generative systems, and games.
+        </div>
+    </header>
 
-          // Enable pagination
-          // Enable pagination with customized bullets
-          pagination: {
-              el: '.swiper-pagination', // CSS selector for the pagination container
-              clickable: true, // Enable clickable pagination bullets
-              renderBullet: function (index, className) {
-                  return '<span class="' + className + '"></span>'; // Customize the content of the pagination bullets
-  },
-          },
+    <main>
+        <h2>Loops</h2>
+        <div class="project-grid">
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/loop_3x33.gif" alt="3x33 loop">
+                <div class="project-info">
+                    <div class="project-title"></div>
+                    <div class="project-year">2021</div>
+                    <div class="project-links">
+                        <a class="gif-link" href="./assets/loop_3x33.gif" target="_blank">.gif</a>
+                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/1828" target="_blank">objkt</a>
+                    </div>
+                </div>
+            </div>
 
-          // Navigation arrows
-          navigation: {
-              nextEl: '.custom-next-button', // CSS selector for the next button
-              prevEl: '.custom-prev-button', // CSS selector for the previous button
-          },
-      });
-  </script>
-   
-<footer>
-  <div class="save-container">
-    <p id="saveButton">💾</p>
-    <div id="popup">GAME SAVED</div>
-  </div>
-</footer>
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/ruby_loop.gif" alt="Ruby loop">
+                <div class="project-info">
+                    <div class="project-title"></div>
+                    <div class="project-year">2021</div>
+                    <div class="project-links">
+                        <a class="gif-link" href="./assets/ruby_loop.gif" target="_blank">.gif</a>
+                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/16655" target="_blank">objkt</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/lotus.gif" alt="Lotus loop">
+                <div class="project-info">
+                    <div class="project-title"></div>
+                    <div class="project-year">2021</div>
+                    <div class="project-links">
+                        <a class="gif-link" href="./full/lotus.gif" target="_blank">.gif</a>
+                        <!-- <a class="objkt-link" href="https://objkt.com/tokens/versum_items/3024" target="_blank">objkt</a> -->
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/4x44.gif" alt="Lotus loop">
+                <div class="project-info">
+                    <div class="project-title"></div>
+                    <div class="project-year">2021</div>
+                    <div class="project-links">
+                        <a class="gif-link" href="./full/4x44.gif" target="_blank">.gif</a>
+                        <a class="objkt-link" href="https://objkt.com/tokens/versum_items/3024" target="_blank">objkt</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h2>Drawings</h2>
+        <div class="project-grid">
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/flowercrow.gif" alt="Flower crow drawing">
+                <div class="project-info">
+                    <div class="project-title">Flower Crow</div>
+                    <div class="project-year">2021</div>
+                    <div class="project-links">
+                        <a class="gif-link" href="./full/crow_skull.png" target="_blank">.png</a>
+                        <a class="objkt-link" href="https://objkt.com/tokens/versum_items/1694" target="_blank">objkt</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/moon.gif" alt="Moon drawing">
+                <div class="project-info">
+                    <div class="project-title">Moon</div>
+                    <div class="project-year">2021</div>
+                    <div class="project-links">
+                        <a class="gif-link" href="./full/moon_phone.jpeg" target="_blank">.jpeg</a>
+                        <a class="objkt-link" href="https://objkt.com/tokens/versum_items/812" target="_blank">objkt</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/skullthroughspace.gif" alt="Skull through space">
+                <div class="project-info">
+                    <div class="project-title">Skull Through Space</div>
+                    <div class="project-year">2021</div>
+                    <div class="project-links">
+                        <a class="gif-link" href="./full/skull_in_space.png" target="_blank">.png</a>
+                        <a class="objkt-link" href="https://objkt.com/tokens/versum_items/3024" target="_blank">objkt</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/death.gif" alt="Death drawing">
+                <div class="project-info">
+                    <div class="project-title">Death</div>
+                    <div class="project-year">2021</div>
+                    <div class="project-links">
+                        <a class="gif-link" href="./full/death.png" target="_blank">.png</a>
+                        <a class="objkt-link" href="https://objkt.com/tokens/versum_items/280" target="_blank">objkt</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Interactive</h2>
+        <div class="project-grid">
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/begunki.gif" alt="beegoonkee">
+                <div class="project-info">
+                    <div class="project-title">beegoonkee</div>
+                    <div class="project-year">2021</div>
+                    <div class="project-links">
+                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/10633" target="_blank">objkt</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/squiggles.gif" alt="squiggles">
+                <div class="project-info">
+                    <div class="project-title">squiggles</div>
+                    <div class="project-year">2021</div>
+                    <div class="project-links">
+                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/10633" target="_blank">objkt</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/self_obsession.gif" alt="self obsession">
+                <div class="project-info">
+                    <div class="project-title">self obsession</div>
+                    <div class="project-year">2021</div>
+                    <div class="project-links">
+                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/12517" target="_blank">objkt</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/eternal_spring.gif" alt="eternal_spring">
+                <div class="project-info">
+                    <div class="project-title">eternal_spring</div>
+                    <div class="project-year">2021</div>
+                    <div class="project-links">
+                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/13609" target="_blank">objkt</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/parts01.gif" alt="parts01">
+                <div class="project-info">
+                    <div class="project-title">parts#0001</div>
+                    <div class="project-year">2021</div>
+                    <div class="project-links">
+                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/150965" target="_blank">objkt</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/parts02.gif" alt="parts02">
+                <div class="project-info">
+                    <div class="project-title">parts#0002</div>
+                    <div class="project-year">2021</div>
+                    <div class="project-links">
+                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/158131" target="_blank">objkt</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/parts03.gif" alt="parts03">
+                <div class="project-info">
+                    <div class="project-title">parts#0003</div>
+                    <div class="project-year">2021</div>
+                    <div class="project-links">
+                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/180602" target="_blank">objkt</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Generative Collections</h2>
+        <div class="project-grid">
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/chelovechki.gif" alt="chelovechki">
+                <div class="project-info">
+                    <div class="project-title">chelovechki</div>
+                    <div class="project-year">2022</div>
+                    <div class="project-links">
+                        <a class="link" href="https://www.fxhash.xyz/project/chelovechki" target="_blank">fxhash</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/meta.gif" alt="meta cards">
+                <div class="project-info">
+                    <div class="project-title">meta cards</div>
+                    <div class="project-year">2022</div>
+                    <div class="project-links">
+                        <a class="link" href="https://www.fxhash.xyz/project/meta-cards" target="_blank">fxhash</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/city.gif" alt="city of hope and despair">
+                <div class="project-info">
+                    <div class="project-title">city of hope and despair</div>
+                    <div class="project-year">2022</div>
+                    <div class="project-links">
+                        <a class="link" href="https://www.fxhash.xyz/project/city-of-hope-and-despair" target="_blank">fxhash</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/islands_.gif" alt="islands">
+                <div class="project-info">
+                    <div class="project-title">islands</div>
+                    <div class="project-year">2022</div>
+                    <div class="project-links">
+                        <a class="link" href="https://www.fxhash.xyz/project/islands" target="_blank">fxhash</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/ii.gif" alt="islands ii">
+                <div class="project-info">
+                    <div class="project-title">islands ii</div>
+                    <div class="project-year">2025</div>
+                    <div class="project-links">
+                        <a class="link" href="https://www.fxhash.xyz/project/islands-ii" target="_blank">fxhash</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Blockchain Art</h2>
+        <div class="project-grid">
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/showdown.gif" alt="SHOWDOWN">
+                <div class="project-info">
+                    <div class="project-title">SHOWDOWN</div>
+                    <div class="project-year">2021</div>
+                    <div class="project-links">
+                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/196844" target="_blank">objkt</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/adresses.gif" alt="ADDRESSES">
+                <div class="project-info">
+                    <div class="project-title">ADDRESSES</div>
+                    <div class="project-year">2021</div>
+                    <div class="project-links">
+                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/207632" target="_blank">objkt</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/typeofdance.gif" alt="type_of_dance">
+                <div class="project-info">
+                    <div class="project-title">type_of_dance</div>
+                    <div class="project-year">2024</div>
+                    <div class="project-links">
+                        <a class="objkt-link" href="https://objkt.com/tokens/KT1PCa8pufaSpvdA7ad8tPa69USGnqZDhhPk/2" target="_blank">objkt</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/typeofplants.gif" alt="type_of_plants">
+                <div class="project-info">
+                    <div class="project-title">type_of_plants</div>
+                    <div class="project-year">2024</div>
+                    <div class="project-links">
+                        <a class="objkt-link" href="https://objkt.com/tokens/KT1PCa8pufaSpvdA7ad8tPa69USGnqZDhhPk/3" target="_blank">objkt</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/typeofsnake.gif" alt="type_of_snake">
+                <div class="project-info">
+                    <div class="project-title">type_of_snake</div>
+                    <div class="project-year">2024</div>
+                    <div class="project-links">
+                        <a class="objkt-link" href="https://objkt.com/tokens/KT1PCa8pufaSpvdA7ad8tPa69USGnqZDhhPk/7" target="_blank">objkt</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/typeofinfinity.gif" alt="type_of_infinity">
+                <div class="project-info">
+                    <div class="project-title">type_of_infinity</div>
+                    <div class="project-year">2024</div>
+                    <div class="project-links">
+                        <a class="objkt-link" href="https://objkt.com/tokens/KT1PCa8pufaSpvdA7ad8tPa69USGnqZDhhPk/8" target="_blank">objkt</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Neural Networks</h2>
+        <div class="project-grid">
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/doughnots.gif" alt="dough nots">
+                <div class="project-info">
+                    <div class="project-title">dough nots</div>
+                    <div class="project-year">2021</div>
+                        <a class="gif-link" href="./full/doughnots.gif" target="_blank">.gif</a>
+                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/185681" target="_blank">objkt</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/tokblock.gif" alt="tokBLOCK challenge">
+                <div class="project-info">
+                    <div class="project-title">tokBLOCK challenge</div>
+                    <div class="project-year">2021</div>
+                        <a class="gif-link" href="./full/tokblock.mp4" target="_blank">.mp4</a>
+                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/188191" target="_blank">objkt</a>
+                </div>
+            </div>
+        </div>
+
+        <h2>Games</h2>
+        <div class="project-grid">
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/fs.gif" alt="Fancy Skulls">
+                <div class="project-info">
+                    <div class="project-title">Fancy Skulls</div>
+                    <div class="project-year">2015</div>
+                    <div class="project-links">
+                        <a class="link" href="https://store.steampowered.com/app/307090/" target="_blank">Steam</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <img class="project-image pixel-art" src="./previews/boxlife.gif" alt="Box Life">
+                <div class="project-info">
+                    <div class="project-title">Box Life</div>
+                    <div class="project-year">2013</div>
+                    <div class="project-links">
+                        <a class="link" href="https://gamejolt.com/games/box-life/17952" target="_blank">GameJolt</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Contact: <a class="link" href="mailto:tequibo@gmail.com">tequibo@gmail.com</a> </p>
+    </footer>
+
+    <script>
+        // Add pixelated rendering to all images
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                img.style.imageRendering = 'pixelated';
+                img.style.imageRendering = '-moz-crisp-edges';
+                img.style.imageRendering = 'crisp-edges';
+            });
+        });
+    </script>
 </body>
-<script>
-  const phrases = [
-  "GAME SAVED",
-  // "☺️",
-];
-let isSaving = false; // Track if a save operation is in progress
 
-document.getElementById("saveButton").addEventListener("click", function() {
-  if (!isSaving) { // Check if a save operation is not in progress
-    isSaving = true; // Set the flag to indicate a save operation is in progress
-    document.getElementById("popup").style.display = "block";
-    const randomIndex = Math.floor(Math.random() * phrases.length); // Generate a random index
-    document.getElementById("popup").innerText = phrases[randomIndex]; // Set the random phrase
-    setTimeout(function() {
-      document.getElementById("popup").style.display = "none";
-      isSaving = false; // Reset the flag once the save operation is complete
-    }, 2000); // 2000 milliseconds = 2 seconds
-  }
-});
-  </script>
 </html>
