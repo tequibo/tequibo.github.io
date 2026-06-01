@@ -1,4 +1,8 @@
 
+/interactive/meta_cards/index.html
+title = meta cards
+year = 2022
+blockchain_link = https://www.fxhash.xyz/project/meta-cards
 
 
 
@@ -67,7 +71,7 @@ title = chelovechki
 year = 2022
 blockchain_link = https://www.fxhash.xyz/project/chelovechki
 
-/interactive/index.html
+/interactive/meta_cards/index.html
 title = meta cards
 year = 2022
 blockchain_link = https://www.fxhash.xyz/project/meta-cards
