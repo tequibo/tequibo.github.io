@@ -1,5 +1,5 @@
 
-/interactive/meta_cards/index.html
+/interactive/mc/index.html
 title = meta cards
 year = 2022
 blockchain_link = https://www.fxhash.xyz/project/meta-cards
