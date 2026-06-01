@@ -312,55 +312,18 @@
       }
 
       // Load HTML or SVF in iframe
-async function loadIframeContent(project, container) {
-    container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:white;">Loading...</div>';
-    
-    const ext = getFileExtension(project.path);
-    
-    try {
-        const response = await fetch(project.path);
-        let content = await response.text();
-        
-        // Get the directory path for relative resources
-        const pathParts = project.path.split('/');
-        pathParts.pop();
-        const basePath = pathParts.join('/') + '/';
-        
-        if (ext === 'svg') {
-            container.innerHTML = content;
-            const svg = container.querySelector('svg');
-            if (svg) {
-                svg.style.width = '100%';
-                svg.style.height = '100%';
-            }
-        } else {
-            // Inject base tag to fix relative paths
-            if (content.includes('<head>')) {
-                content = content.replace('<head>', `<head><base href="${basePath}">`);
-            } else if (content.includes('<html>')) {
-                content = content.replace('<html>', `<html><head><base href="${basePath}"></head>`);
-            } else {
-                content = `<head><base href="${basePath}"></head>${content}`;
-            }
-            
-            const iframe = document.createElement('iframe');
-            iframe.srcdoc = content;
-            iframe.style.width = '100%';
-            iframe.style.height = '100%';
-            iframe.style.border = 'none';
-            container.innerHTML = '';
-            container.appendChild(iframe);
+      function loadIframeContent(project, container) {
+        container.innerHTML = "";
+        const iframe = document.createElement("iframe");
+        iframe.src = project.path;
+
+        // Add permissions for SVF/3D content
+        if (getFileExtension(project.path) === "svg") {
+          iframe.sandbox = "allow-scripts allow-same-origin";
         }
-    } catch (err) {
-        console.error('Failed to load:', err);
-        container.innerHTML = `
-            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:white;text-align:center;padding:20px;">
-                <p>Failed to load content</p>
-                <a href="${project.path}" target="_blank" style="color:#66ccff;">Open in new tab →</a>
-            </div>
-        `;
-    }
-}
+
+        container.appendChild(iframe);
+      }
 
       function updateToolbar(project, index, total) {
         // Title - use filename if no title
