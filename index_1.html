@@ -1,0 +1,582 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Viewer</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        overflow: hidden;
+        font-family:
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        background: #1a1a1a;
+      }
+
+      /* Main container - manages layout */
+      .app-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        width: 100vw;
+      }
+
+      /* Content area (iframe or media) - takes remaining space */
+      .content-area {
+        flex: 1;
+        position: relative;
+        background: #1a1a1a;
+        overflow: hidden;
+      }
+
+      /* Iframe for HTML and SVF files */
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: block;
+      }
+
+      /* Container for non-HTML media */
+      .media-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #1a1a1a;
+      }
+
+      .media-container img,
+      .media-container video {
+        max-width: 90%;
+        max-height: 90%;
+        object-fit: contain;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      }
+
+      .media-container img {
+        width: auto;
+        height: auto;
+      }
+
+      /* PDF styling */
+      .pdf-viewer {
+        width: 90%;
+        height: 90%;
+        border: none;
+        background: white;
+      }
+
+      /* Toolbar - white rectangle at bottom */
+      .toolbar {
+        background: white;
+        width: 100%;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        flex-shrink: 0;
+        min-height: 200px;
+        transition: all 0.3s ease;
+      }
+
+      .toolbar.hidden {
+        display: none;
+      }
+
+      /* Toolbar content layout */
+      .toolbar-content {
+        width: 100%;
+        height: 100%;
+        min-height: 200px;
+        display: flex;
+        align-items: stretch;
+        position: relative;
+      }
+
+      /* Navigation arrows - full height */
+      .nav-arrow {
+        background: none;
+        border: none;
+        font-size: 36px;
+        font-weight: bold;
+        cursor: pointer;
+        width: 80px;
+        height: auto;
+        min-height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+        font-family: monospace;
+        color: #333;
+        flex-shrink: 0;
+      }
+
+      .nav-arrow:hover {
+        background: #f0f0f0;
+      }
+
+      /* Left section - title, year, description - aligned to top */
+      .toolbar-left {
+        flex: 1;
+        padding: 25px 0 25px 25px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        text-align: left;
+      }
+
+      .toolbar-left h1 {
+        font-size: 22px;
+        margin-bottom: 8px;
+        color: #333;
+        word-break: break-word;
+      }
+
+      .toolbar-year {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 15px;
+      }
+
+      .toolbar-description {
+        color: #555;
+        font-size: 14px;
+        white-space: pre-wrap;
+        word-break: break-word;
+        line-height: 1.6;
+        max-width: 500px;
+      }
+
+      /* Right section - links - aligned to bottom */
+      .toolbar-right {
+        padding: 25px 25px 25px 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        text-align: right;
+        flex-shrink: 0;
+        min-width: 160px;
+      }
+
+      /* Links - vertical stack, red, right-aligned */
+      .toolbar-links {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .toolbar-links a {
+        color: red;
+        text-decoration: none;
+        font-size: 14px;
+      }
+
+      .toolbar-links a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 768px) {
+        .nav-arrow {
+          width: 60px;
+          font-size: 28px;
+        }
+        .toolbar-left {
+          padding: 20px 0 20px 20px;
+        }
+        .toolbar-right {
+          padding: 20px 20px 20px 0;
+          min-width: 130px;
+        }
+        .toolbar-left h1 {
+          font-size: 18px;
+        }
+        .toolbar-description {
+          font-size: 12px;
+        }
+        .toolbar-links a {
+          font-size: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-container">
+      <div class="content-area" id="contentArea">
+        <!-- Dynamic content goes here -->
+      </div>
+
+      <div class="toolbar" id="toolbar">
+        <div class="toolbar-content">
+          <button class="nav-arrow" id="prevBtn">←</button>
+          <div class="toolbar-left">
+            <h1 id="toolbarTitle"></h1>
+            <div class="toolbar-year" id="toolbarYear"></div>
+            <div class="toolbar-description" id="toolbarDesc"></div>
+          </div>
+          <div class="toolbar-right">
+            <div class="toolbar-links" id="toolbarLinks"></div>
+          </div>
+          <button class="nav-arrow" id="nextBtn">→</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let projects = [];
+      let currentIndex = 0;
+      let toolbarVisible = true;
+
+      // Helper: get filename from path
+      function getFileNameFromPath(path) {
+        return path.split("/").pop();
+      }
+
+      // Helper: get file extension
+      function getFileExtension(path) {
+        return path.split(".").pop().toLowerCase();
+      }
+
+      // Helper: check if file should be loaded in iframe (HTML or SVF)
+      function isIframeFile(path) {
+        const ext = getFileExtension(path);
+        return ["html", "htm", "svg"].includes(ext);
+      }
+
+      // Helper: check if image
+      function isImageFile(path) {
+        const ext = getFileExtension(path);
+        return [
+          "jpg",
+          "jpeg",
+          "png",
+          "gif",
+          "webp",
+          "svg",
+          "bmp",
+          "ico",
+        ].includes(ext);
+      }
+
+      // Helper: check if video
+      function isVideoFile(path) {
+        const ext = getFileExtension(path);
+        return ["mp4", "webm", "ogg", "mov", "avi", "mkv"].includes(ext);
+      }
+
+      // Helper: check if PDF
+      function isPdfFile(path) {
+        return getFileExtension(path) === "pdf";
+      }
+
+      // Load media (non-HTML, non-SVF)
+      function loadMedia(project, container) {
+        const path = project.path;
+        container.innerHTML = "";
+
+        if (isImageFile(path)) {
+          const img = document.createElement("img");
+          img.src = path;
+          img.alt = project.title || getFileNameFromPath(path);
+          img.onerror = () => {
+            container.innerHTML =
+              '<div style="color:white;text-align:center;">Failed to load image</div>';
+          };
+          container.appendChild(img);
+        } else if (isVideoFile(path)) {
+          const video = document.createElement("video");
+          video.src = path;
+          video.controls = true;
+          video.autoplay = false;
+          video.loop = false;
+          container.appendChild(video);
+        } else if (isPdfFile(path)) {
+          const pdfEmbed = document.createElement("iframe");
+          pdfEmbed.className = "pdf-viewer";
+          pdfEmbed.src = path;
+          container.appendChild(pdfEmbed);
+        } else {
+          container.innerHTML = `<div style="color:white;text-align:center;">
+                    <p>Cannot display this file type: ${getFileExtension(path)}</p>
+                    <a href="${path}" target="_blank" style="color:#66ccff;">Download or open in new tab</a>
+                </div>`;
+        }
+      }
+
+      // Load HTML or SVF in iframe
+async function loadIframeContent(project, container) {
+    container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:white;">Loading...</div>';
+    
+    const ext = getFileExtension(project.path);
+    
+    try {
+        const response = await fetch(project.path);
+        let content = await response.text();
+        
+        // Get the directory path for relative resources
+        const pathParts = project.path.split('/');
+        pathParts.pop();
+        const basePath = pathParts.join('/') + '/';
+        
+        if (ext === 'svg') {
+            container.innerHTML = content;
+            const svg = container.querySelector('svg');
+            if (svg) {
+                svg.style.width = '100%';
+                svg.style.height = '100%';
+            }
+        } else {
+            // Inject base tag to fix relative paths
+            if (content.includes('<head>')) {
+                content = content.replace('<head>', `<head><base href="${basePath}">`);
+            } else if (content.includes('<html>')) {
+                content = content.replace('<html>', `<html><head><base href="${basePath}"></head>`);
+            } else {
+                content = `<head><base href="${basePath}"></head>${content}`;
+            }
+            
+            const iframe = document.createElement('iframe');
+            iframe.srcdoc = content;
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            container.innerHTML = '';
+            container.appendChild(iframe);
+        }
+    } catch (err) {
+        console.error('Failed to load:', err);
+        container.innerHTML = `
+            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:white;text-align:center;padding:20px;">
+                <p>Failed to load content</p>
+                <a href="${project.path}" target="_blank" style="color:#66ccff;">Open in new tab →</a>
+            </div>
+        `;
+    }
+}
+
+      function updateToolbar(project, index, total) {
+        // Title - use filename if no title
+        let displayTitle = project.title;
+        if (!displayTitle || displayTitle.trim() === "") {
+          displayTitle = getFileNameFromPath(project.path);
+        }
+        document.getElementById("toolbarTitle").textContent =
+          `${displayTitle} (${index + 1}/${total})`;
+
+        // Year
+        const yearDiv = document.getElementById("toolbarYear");
+        if (project.year && project.year.trim() !== "") {
+          yearDiv.textContent = `(${project.year})`;
+          yearDiv.style.display = "block";
+        } else {
+          yearDiv.textContent = "";
+          yearDiv.style.display = "none";
+        }
+
+        // Links (vertical, red, right-aligned)
+        const linksDiv = document.getElementById("toolbarLinks");
+        linksDiv.innerHTML = "";
+
+        // Add blockchain link if exists
+        if (project.blockchain_link) {
+          addLink(linksDiv, "blockchain", project.blockchain_link);
+        }
+
+        // Add shadertoy link if exists
+        if (project.shadertoy_link) {
+          addLink(linksDiv, "shadertoy", project.shadertoy_link);
+        }
+
+        // Add permalink (direct link to current media/iframe)
+        addLink(linksDiv, "link", project.path);
+
+        // Description
+        const descDiv = document.getElementById("toolbarDesc");
+        const description = project.description || "";
+        descDiv.textContent = description;
+      }
+
+      function addLink(container, label, url) {
+        const link = document.createElement("a");
+        link.href = url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = label;
+        container.appendChild(link);
+      }
+
+      function loadProject(index) {
+        if (!projects.length || index < 0 || index >= projects.length) return;
+
+        const project = projects[index];
+        currentIndex = index;
+
+        const contentArea = document.getElementById("contentArea");
+
+        // Load content based on file type
+        if (isIframeFile(project.path)) {
+          loadIframeContent(project, contentArea);
+        } else {
+          // Create media container with proper styling
+          contentArea.innerHTML = "";
+          const mediaContainer = document.createElement("div");
+          mediaContainer.className = "media-container";
+          contentArea.appendChild(mediaContainer);
+          loadMedia(project, mediaContainer);
+        }
+
+        // Update toolbar with index and total
+        updateToolbar(project, index, projects.length);
+      }
+
+      function nextProject() {
+        if (projects.length === 0) return;
+        const newIndex = (currentIndex + 1) % projects.length;
+        loadProject(newIndex);
+      }
+
+      function prevProject() {
+        if (projects.length === 0) return;
+        const newIndex = (currentIndex - 1 + projects.length) % projects.length;
+        loadProject(newIndex);
+      }
+
+      function toggleToolbar() {
+        toolbarVisible = !toolbarVisible;
+        const toolbar = document.getElementById("toolbar");
+        if (toolbarVisible) {
+          toolbar.classList.remove("hidden");
+        } else {
+          toolbar.classList.add("hidden");
+        }
+        setTimeout(() => {
+          window.dispatchEvent(new Event("resize"));
+        }, 50);
+      }
+
+      function showError(msg) {
+        const contentArea = document.getElementById("contentArea");
+        contentArea.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:white;text-align:center;padding:20px;">${msg}</div>`;
+        document.getElementById("toolbarTitle").textContent = "Error";
+        document.getElementById("toolbarDesc").textContent = msg;
+      }
+
+      // Parse config with quoted description support
+      async function loadConfig() {
+        try {
+          const response = await fetch("projects.txt");
+          const text = await response.text();
+          return parseConfig(text);
+        } catch (err) {
+          console.error("Failed to load projects.txt:", err);
+          showError("Could not load projects.txt file");
+          return [];
+        }
+      }
+
+      function parseConfig(raw) {
+        const lines = raw.split(/\r?\n/);
+        const projects = [];
+        let current = null;
+        let inMultilineDescription = false;
+        let descriptionLines = [];
+
+        for (let i = 0; i < lines.length; i++) {
+          let line = lines[i];
+          let trimmedLine = line.trim();
+
+          // Skip empty lines outside of description
+          if (trimmedLine === "" && !inMultilineDescription) continue;
+
+          // Start of new project (line starts with /)
+          if (trimmedLine.startsWith("/") && !inMultilineDescription) {
+            // Save previous project
+            if (current !== null) {
+              projects.push(current);
+            }
+
+            // Start new project
+            current = { path: trimmedLine };
+          }
+          // Parse key-value pairs
+          else if (current && line.includes("=") && !inMultilineDescription) {
+            const eqIndex = line.indexOf("=");
+            const key = line.substring(0, eqIndex).trim();
+            let value = line.substring(eqIndex + 1).trim();
+
+            // Check if value starts with quote (multi-line description)
+            if (key === "description" && value.startsWith('"')) {
+              value = value.substring(1);
+              if (value.endsWith('"')) {
+                value = value.substring(0, value.length - 1);
+                current[key] = value;
+              } else {
+                inMultilineDescription = true;
+                descriptionLines = [value];
+              }
+            } else {
+              current[key] = value;
+            }
+          }
+          // Continue multi-line description
+          else if (current && inMultilineDescription) {
+            if (trimmedLine.endsWith('"')) {
+              let lastLine = trimmedLine.substring(0, trimmedLine.length - 1);
+              descriptionLines.push(lastLine);
+              current.description = descriptionLines.join("\n").trim();
+              inMultilineDescription = false;
+              descriptionLines = [];
+            } else {
+              descriptionLines.push(line);
+            }
+          }
+        }
+
+        if (current !== null) {
+          projects.push(current);
+        }
+
+        return projects;
+      }
+
+      // Keyboard controls
+      window.addEventListener("keydown", (e) => {
+        const key = e.key.toLowerCase();
+        if (key === "h" || key === "arrowleft" || key === "arrowdown") {
+          e.preventDefault();
+          prevProject();
+        } else if (key === "l" || key === "arrowright" || key === "arrowup") {
+          e.preventDefault();
+          nextProject();
+        } else if (key === " ") {
+          e.preventDefault();
+          toggleToolbar();
+        }
+      });
+
+      // Click handlers
+      document.getElementById("prevBtn").addEventListener("click", prevProject);
+      document.getElementById("nextBtn").addEventListener("click", nextProject);
+
+      // Initialize
+      async function init() {
+        projects = await loadConfig();
+        if (projects.length > 0) {
+          loadProject(0);
+        } else {
+          showError("No projects found in projects.txt");
+        }
+      }
+
+      init();
+    </script>
+  </body>
+</html>

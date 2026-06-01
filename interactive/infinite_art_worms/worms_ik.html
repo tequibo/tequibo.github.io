@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>+</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=egde,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<canvas id=canvas width=900 height=900 style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>   
+<canvas id=canvas2 width=900 height=900 style="position: absolute; left: 0; top: 0; z-index: 0;">  </canvas>
+<script type="text/javascript" charset="utf-8">
+/*
+Simple 2D JavaScript Vector Class
+Hacked from evanw's lightgl.js
+https://github.com/evanw/lightgl.js/blob/master/src/vector.js
+*/
+
+function Vector(x, y) {
+	this.x = x || 0;
+	this.y = y || 0;
+}
+
+/* INSTANCE METHODS */
+
+Vector.prototype = {
+	negative: function() {
+		this.x = -this.x;
+		this.y = -this.y;
+		return this;
+	},
+	add: function(v) {
+		if (v instanceof Vector) {
+			this.x += v.x;
+			this.y += v.y;
+		} else {
+			this.x += v;
+			this.y += v;
+		}
+		return this;
+	},
+	subtract: function(v) {
+		if (v instanceof Vector) {
+			this.x -= v.x;
+			this.y -= v.y;
+		} else {
+			this.x -= v;
+			this.y -= v;
+		}
+		return this;
+	},
+	multiply: function(v) {
+		if (v instanceof Vector) {
+			this.x *= v.x;
+			this.y *= v.y;
+		} else {
+			this.x *= v;
+			this.y *= v;
+		}
+		return this;
+	},
+	divide: function(v) {
+		if (v instanceof Vector) {
+			if(v.x != 0) this.x /= v.x;
+			if(v.y != 0) this.y /= v.y;
+		} else {
+			if(v != 0) {
+				this.x /= v;
+				this.y /= v;
+			}
+		}
+		return this;
+	},
+	equals: function(v) {
+		return this.x == v.x && this.y == v.y;
+	},
+	dot: function(v) {
+		return this.x * v.x + this.y * v.y;
+	},
+	cross: function(v) {
+		return this.x * v.y - this.y * v.x
+	},
+	length: function() {
+		return Math.sqrt(this.dot(this));
+	},
+	normalize: function() {
+		return this.divide(this.length());
+	},
+	min: function() {
+		return Math.min(this.x, this.y);
+	},
+	max: function() {
+		return Math.max(this.x, this.y);
+	},
+	toAngles: function() {
+		return -Math.atan2(-this.y, this.x);
+	},
+	angleTo: function(a) {
+		return Math.acos(this.dot(a) / (this.length() * a.length()));
+	},
+	toArray: function(n) {
+		return [this.x, this.y].slice(0, n || 2);
+	},
+	clone: function() {
+		return new Vector(this.x, this.y);
+	},
+	set: function(x, y) {
+		this.x = x; this.y = y;
+		return this;
+	}
+};
+
+/* STATIC METHODS */
+Vector.negative = function(v) {
+	return new Vector(-v.x, -v.y);
+};
+Vector.add = function(a, b) {
+	if (b instanceof Vector) return new Vector(a.x + b.x, a.y + b.y);
+	else return new Vector(a.x + b, a.y + b);
+};
+Vector.subtract = function(a, b) {
+	if (b instanceof Vector) return new Vector(a.x - b.x, a.y - b.y);
+	else return new Vector(a.x - b, a.y - b);
+};
+Vector.multiply = function(a, b) {
+	if (b instanceof Vector) return new Vector(a.x * b.x, a.y * b.y);
+	else return new Vector(a.x * b, a.y * b);
+};
+Vector.divide = function(a, b) {
+	if (b instanceof Vector) return new Vector(a.x / b.x, a.y / b.y);
+	else return new Vector(a.x / b, a.y / b);
+};
+Vector.equals = function(a, b) {
+	return a.x == b.x && a.y == b.y;
+};
+Vector.dot = function(a, b) {
+	return a.x * b.x + a.y * b.y;
+};
+Vector.cross = function(a, b) {
+	return a.x * b.y - a.y * b.x;
+};
+/* accepts parameters
+ * h  Object = {h:x, s:y, v:z}
+ * OR 
+ * h, s, v
+*/
+function HSVtoRGB(h, s, v) {
+    var r, g, b, i, f, p, q, t;
+    if (arguments.length === 1) {
+        s = h.s, v = h.v, h = h.h;
+    }
+    i = Math.floor(h * 6);
+    f = h * 6 - i;
+    p = v * (1 - s);
+    q = v * (1 - f * s);
+    t = v * (1 - (1 - f) * s);
+    switch (i % 6) {
+        case 0: r = v, g = t, b = p; break;
+        case 1: r = q, g = v, b = p; break;
+        case 2: r = p, g = v, b = t; break;
+        case 3: r = p, g = q, b = v; break;
+        case 4: r = t, g = p, b = v; break;
+        case 5: r = v, g = p, b = q; break;
+    }
+    return {
+        r: Math.round(r * 255),
+        g: Math.round(g * 255),
+        b: Math.round(b * 255)
+    };
+}
+/* accepts parameters
+ * r  Object = {r:x, g:y, b:z}
+ * OR 
+ * r, g, b
+*/
+function RGBtoHSV(r, g, b) {
+    if (arguments.length === 1) {
+        g = r.g, b = r.b, r = r.r;
+    }
+    var max = Math.max(r, g, b), min = Math.min(r, g, b),
+        d = max - min,
+        h,
+        s = (max === 0 ? 0 : d / max),
+        v = max / 255;
+
+    switch (max) {
+        case min: h = 0; break;
+        case r: h = (g - b) + d * (g < b ? 6: 0); h /= 6 * d; break;
+        case g: h = (b - r) + d * 2; h /= 6 * d; break;
+        case b: h = (r - g) + d * 4; h /= 6 * d; break;
+    }
+
+    return {
+        h: h,
+        s: s,
+        v: v
+    };
+}
+
+function rotate2d(x, y, angle){
+    let s = Math.sin(angle);
+    let c = Math.cos(angle);
+    let newx = x*c-y*s;
+    let newy = x*s+y*c;
+    return {x:newx,y:newy};
+}
+class Particle {
+  constructor(position, delta, parent) {
+    this.parent=parent;
+    this.original_position=position;
+    this.position = new Vector(position.x, position.y); 
+    this.delta = delta;   
+    this.dir=new Vector(); 
+    this.target=new Vector(position.x,position.y);
+    if(parent!=null){
+      this.target=parent.position+this.delta;
+    }
+    this.len = Math.sqrt(delta.x*delta.x+delta.y*delta.y);
+    this.angle=Math.atan2(delta.y,delta.x);
+    this.h = 1;//color_hue;
+    let rgb = HSVtoRGB(this.h,1,1);
+    this.color = 'rgb('+rgb.r+','+rgb.g+','+rgb.b+')';
+    // this.color = 'rgb('+Math.random()*255+', '+Math.random()*255+', '+Math.random()*255+')';
+    // this.color = this.color.toString();
+  }
+  run(){
+    if(this.parent!=null){
+      this.target = this.parent.position;
+
+
+      this.dir.x = this.target.x-this.position.x+this.delta.x;
+      this.dir.y = this.target.y-this.position.y+this.delta.y;
+    }
+    else{
+      this.dir.x = this.target.x-this.position.x;
+      this.dir.y = this.target.y-this.position.y;
+      // this.target.x = mousePos.x;
+      // this.target.y = mousePos.y;
+    }
+    // this.target.x+=this.delta.x;
+    // this.target.y+=this.delta.y;
+    
+    this.position.x+=(this.dir.x)*.3;
+    this.position.y+=(this.dir.y)*.3;
+    // this.position.x=this.target.x+this.delta.x;
+    // this.position.y=this.target.y+this.delta.y;
+    // this.angle=;
+    // let r = rotate2d(this.position.x, this.position.y, this.angle);
+    // this.position.x=r.x;//Math.random()-.5;
+    // this.position.y=r.y;//Math.random()-.5;
+  }
+  render(){
+    // ctx.moveTo(this.position.x, this.position.y);
+    // ctx.lineTo(this.position.x+this.delta.x, this.position.y+this.delta.y);
+    // ctx.lineWidth = 2;
+    // ctx.stroke(); 
+  }
+}
+let TAU = 6.2831853;
+// const start = Date.now();
+class ParticleSystem{
+  constructor(origin){
+    this.counter=0;
+    this.ii=0;
+    this.anim=false;
+    this.origin=origin;
+    this.particles = [];
+    this.legs=6+Math.floor(Math.random()*12);//floor(random(6,12));
+    // this.sway=Math.random(0.005,0.01);
+    this.h =Math.random();
+    this.sway=Math.random()*0.02+0.002;
+    this.currentSegment;
+  }
+
+  addParticle() {
+    
+    this.currentSegment = new Particle({x:mousePosPrev.x,y:mousePosPrev.y},{x:mousePos.x-mousePosPrev.x,y:mousePos.y-mousePosPrev.y}, this.currentSegment);
+    
+    this.particles.push(this.currentSegment);
+  }
+  run() {
+    let head = this.particles[0];
+    let p; 
+    let len = this.particles.length;    
+    for (let i = 0; i<this.particles.length; i++) {
+      p = this.particles[i];
+      if (this.anim) {
+          p.run();
+      }
+      p.render();
+      ctx.beginPath(); 
+      let rgb = HSVtoRGB(this.h,.7,1);
+      ctx.strokeStyle = 'rgb('+rgb.r+','+rgb.g+','+rgb.b+')';
+      if(p.parent!=null){     
+        ctx.moveTo(p.position.x, p.position.y);
+        ctx.lineTo(p.position.x-p.delta.x, p.position.y-p.delta.y);        
+        // ctx.lineTo(p.parent.position.x, p.parent.position.y);        
+      }      
+      ctx.lineWidth = 4-3*i/len;
+      ctx.stroke(); 
+    }
+       
+
+    if (this.anim) {
+        this.ii++;
+        if(this.ii>=this.particles.length){
+            this.ii=0;
+        }
+        // ctx2.strokeStyle = 'rgb('+23+','+32+','+32+')';
+        // ctx2.moveTo(head.position.x, head.position.y);
+        // ctx2.lineTo(mousePos.x, mousePos.y);  
+        // ctx2.lineWidth = 2;
+        // ctx2.stroke(); 
+        console.log(head.target.x);
+        // head.target.x+=(head.target.x-this.particles[this.ii].original_position.x)*.5;
+        // head.target.y+=(head.target.y-this.particles[this.ii].original_position.y)*.5;
+    }  
+}  
+}  
+
+let mousePos;  
+let mousePosPrev;
+let lines = [];
+let currentLine;
+let mouseIsPressed=false;
+let color_hue=0;
+function setup() {     
+  // canvas = document.querySelector("canvas");
+  canvas = document.getElementById("canvas");
+  ctx = canvas.getContext("2d");
+
+  canvas2 = document.getElementById("canvas2");
+  ctx2 = canvas2.getContext("2d");
+  ctx2.fillStyle='rgb(10,10,10)';
+  ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
+  resize();
+  window.addEventListener("resize", resize); 
+
+}
+
+function resize() {
+  w = canvas.width = 900;
+  h = canvas.height = 900;
+  w = canvas2.width = 900;
+  h = canvas2.height = 900;
+  //ctx.translate(w / 2, h / 2);
+}
+
+function getMousePos(canvas, e) {
+  var rect = canvas.getBoundingClientRect();
+  return {
+  x: e.clientX - rect.left,
+  y: e.clientY - rect.top
+  };
+}
+let time_old;
+let show_tip=true;
+function draw(e) {
+  var dt = e-time_old;
+  time_old = e;
+  requestAnimationFrame(draw);
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if(show_tip){
+    color_hue+=.001;
+    if(color_hue>1){
+      color_hue=0;
+    }
+  
+    let rgb = HSVtoRGB(color_hue,.7,1);
+    ctx.fillStyle = 'rgb('+rgb.r+','+rgb.g+','+rgb.b+')';
+    // ctx.fillStyle='rgb(155,155,155)';
+    // ctx.textAlign = "center";
+    ctx.font = '28px monospace';
+    ctx.fillText('draw', 40, 60);
+  }
+  
+  if(lines.length>0){
+    for (let i = 0; i <lines.length; i++) {
+      let l = lines[i];
+      if(l.particles.length==0 && l.anim){
+        lines.splice(i,1);
+      }
+      l.run();      
+    }
+  }
+}
+setup();
+ctx2.fillStyle='rgb(10,10,10)';
+  ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
+canvas.onmousemove = function(e){
+    mousePosPrev = mousePos;
+    mousePos = getMousePos(canvas, e);
+    if(mouseIsPressed){
+        color_hue+=.0001;
+        if(color_hue>1){
+            color_hue=0;
+        }
+    }
+    if (mouseIsPressed) { 
+    currentLine.addParticle();    
+  }
+}
+canvas.onmousedown = function(e){
+    mouseIsPressed=true;
+    show_tip=false;
+    // console.log('Mouse position: ' + mousePos.x + ',' + mousePos.y);
+    let l = new ParticleSystem(mousePos);
+    lines.push(l);
+    currentLine=l;  
+}
+canvas.onmouseup = function(e){
+    // console.log('Mouse position: ' + mousePos.x + ',' + mousePos.y);
+    currentLine.anim=true;
+    mouseIsPressed = false;
+}
+draw(1);
+</script>
+</body>
+</html>

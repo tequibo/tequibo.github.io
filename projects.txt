@@ -1,0 +1,138 @@
+
+
+
+
+/loops/loop_3x33.gif
+blockchain_link = https://objkt.com/tokens/hicetnunc/1828
+shadertoy_link = http://something
+
+/media/ruby_loop.gif
+year = 2021
+
+/media/lotus.gif
+year = 2021
+
+/loops/loop_44x4_blue.gif
+blockchain_link = http://etc.com/aesf4d
+shadertoy_link = http://something
+year = 2021
+
+/midnight_shader/index.html
+title = midnight shader
+blockchain_link = http://etc.com/aesf4d
+shadertoy_link = http://something
+description = "more description next
+that works with linebreaks like
+this"
+
+/interactive/spiders.svg
+title = beegoonkee
+year = 2021
+blockchain_link = https://objkt.com/tokens/hicetnunc/10633
+
+/interactive/self_erasing/self_erasing.svg
+title = squiggles || (self-erasing)
+year = 2021
+blockchain_link = https://objkt.com/tokens/hicetnunc/10633
+
+/interactive/infinite_art_worms/index.html
+
+/interactive/self_obsession/index.html
+title = self obsession
+year = 2021
+blockchain_link = https://objkt.com/tokens/hicetnunc/13609
+
+/previews/eternal_spring.gif
+title = eternal_spring
+year = 2021
+blockchain_link = https://objkt.com/tokens/hicetnunc/185125
+
+/interactive/parts_0001/index.html
+title = parts#0001
+year = 2021
+blockchain_link = https://objkt.com/tokens/hicetnunc/150965
+
+/previews/parts02.gif
+title = parts#0002
+year = 2021
+blockchain_link = https://objkt.com/tokens/hicetnunc/158131
+
+/previews/parts03.gif
+title = parts#0003
+year = 2021
+blockchain_link = https://objkt.com/tokens/hicetnunc/180602
+
+/previews/chelovechki.gif
+title = chelovechki
+year = 2022
+blockchain_link = https://www.fxhash.xyz/project/chelovechki
+
+/interactive/index.html
+title = meta cards
+year = 2022
+blockchain_link = https://www.fxhash.xyz/project/meta-cards
+
+/previews/city.gif
+title = city of hope and despair
+year = 2022
+blockchain_link = https://www.fxhash.xyz/project/city-of-hope-and-despair
+
+/previews/islands_.gif
+title = islands
+year = 2022
+blockchain_link = https://www.fxhash.xyz/project/islands
+
+/previews/ii.gif
+title = islands ii
+year = 2025
+blockchain_link = https://www.fxhash.xyz/project/islands-ii
+
+/previews/showdown.gif
+title = SHOWDOWN
+year = 2021
+blockchain_link = https://objkt.com/tokens/hicetnunc/196844
+
+/previews/adresses.gif
+title = ADDRESSES
+year = 2021
+blockchain_link = https://objkt.com/tokens/hicetnunc/207632
+
+/previews/typeofdance.gif
+title = type_of_dance
+year = 2024
+blockchain_link = https://objkt.com/tokens/KT1PCa8pufaSpvdA7ad8tPa69USGnqZDhhPk/2
+
+/previews/typeofplants.gif
+title = type_of_plants
+year = 2024
+blockchain_link = https://objkt.com/tokens/KT1PCa8pufaSpvdA7ad8tPa69USGnqZDhhPk/3
+
+/previews/typeofsnake.gif
+title = type_of_snake
+year = 2024
+blockchain_link = https://objkt.com/tokens/KT1PCa8pufaSpvdA7ad8tPa69USGnqZDhhPk/7
+
+/previews/typeofinfinity.gif
+title = type_of_infinity
+year = 2024
+blockchain_link = https://objkt.com/tokens/KT1PCa8pufaSpvdA7ad8tPa69USGnqZDhhPk/8
+
+/previews/doughnots.gif
+title = dough nots
+year = 2021
+blockchain_link = https://objkt.com/tokens/hicetnunc/185681
+
+/media/tokblock.mp4
+title = tokBLOCK challenge
+year = 2021
+blockchain_link = https://objkt.com/tokens/hicetnunc/188191
+
+/previews/fs.gif
+title = Fancy Skulls
+year = 2015
+blockchain_link = https://store.steampowered.com/app/307090/
+
+/previews/boxlife.gif
+title = Box Life
+year = 2013
+blockchain_link = https://gamejolt.com/games/box-life/17952

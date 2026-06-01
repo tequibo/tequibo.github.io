@@ -1,0 +1,247 @@
+<!-- <svg xmlns="http://www.w3.org/2000/svg" height="100%" width="100%" version="1.1"><script xmlns=""/> -->
+<svg id="svg" width="100vw" height="100vw" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    svg {
+      position: absolute;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    
+  </style>
+ 
+  <foreignObject x="0" y="0" width="100%" height="100%">
+    <span xmlns="http://www.w3.org/1999/xhtml">
+      <canvas id="canvas" width="1000" height="1000"></canvas>
+    </span>
+  </foreignObject>
+
+  <script>
+  // <![CDATA[
+/* accepts parameters
+ * h  Object = {h:x, s:y, v:z}
+ * OR 
+ * h, s, v
+*/
+function HSVtoRGB(h, s, v) {
+    var r, g, b, i, f, p, q, t;
+    if (arguments.length === 1) {
+        s = h.s, v = h.v, h = h.h;
+    }
+    i = Math.floor(h * 6);
+    f = h * 6 - i;
+    p = v * (1 - s);
+    q = v * (1 - f * s);
+    t = v * (1 - (1 - f) * s);
+    switch (i % 6) {
+        case 0: r = v, g = t, b = p; break;
+        case 1: r = q, g = v, b = p; break;
+        case 2: r = p, g = v, b = t; break;
+        case 3: r = p, g = q, b = v; break;
+        case 4: r = t, g = p, b = v; break;
+        case 5: r = v, g = p, b = q; break;
+    }
+    return {
+        r: Math.round(r * 255),
+        g: Math.round(g * 255),
+        b: Math.round(b * 255)
+    };
+}
+/* accepts parameters
+ * r  Object = {r:x, g:y, b:z}
+ * OR 
+ * r, g, b
+*/
+function RGBtoHSV(r, g, b) {
+    if (arguments.length === 1) {
+        g = r.g, b = r.b, r = r.r;
+    }
+    var max = Math.max(r, g, b), min = Math.min(r, g, b),
+        d = max - min,
+        h,
+        s = (max === 0 ? 0 : d / max),
+        v = max / 255;
+
+    switch (max) {
+        case min: h = 0; break;
+        case r: h = (g - b) + d * (g < b ? 6: 0); h /= 6 * d; break;
+        case g: h = (b - r) + d * 2; h /= 6 * d; break;
+        case b: h = (r - g) + d * 4; h /= 6 * d; break;
+    }
+
+    return {
+        h: h,
+        s: s,
+        v: v
+    };
+}
+
+class Particle {
+  constructor(position, color_hue) {
+    this.position = position; 
+    this.h = color_hue;
+    let rgb = HSVtoRGB(this.h,1,1);
+    this.color = 'rgb('+rgb.r+','+rgb.g+','+rgb.b+')';
+    // this.color = 'rgb('+Math.random()*255+', '+Math.random()*255+', '+Math.random()*255+')';
+    // this.color = this.color.toString();
+  }
+}
+let TAU = 6.2831853;
+// const start = Date.now();
+class ParticleSystem{
+  constructor(origin){
+    this.ii=0;
+    this.anim=false;
+    this.origin=origin;
+    this.particles = [];
+    this.legs=6+Math.floor(Math.random()*12);//floor(random(6,12));
+    // this.sway=Math.random(0.005,0.01);
+    this.h =color_hue;
+    this.sway=Math.random()*0.02+0.002;
+  }
+
+  addParticle() {
+    this.particles.push(new Particle({x:mousePos.x-this.origin.x,y:mousePos.y-this.origin.y}, color_hue));
+  }
+  run() {
+    let p;
+    let p2; 
+    let len = this.particles.length;
+    // ctx.strokeStyle = 'rgb('+Math.random()*255+', '+Math.random()*255+', '+Math.random()*255+')';
+    // let dx, dy, dx2, dy2;
+    for(let j=0;j<this.legs;j++){
+      let a = j/this.legs*TAU+Math.sin(Date.now()*.005+j)*TAU*this.sway;
+      let s = Math.sin(a);
+      let c = Math.cos(a);
+      let last_point = this.particles[this.particles.length-1];
+      let ppp = {x: this.origin.x+last_point.position.x,y:this.origin.y+last_point.position.y}; 
+      for (let i = 0; i<this.particles.length; i++) {
+        p = this.particles[i];
+        p2 = this.particles[i-1]; 
+        ctx.beginPath(); 
+        let rgb = HSVtoRGB(p.h,.7,1-j/this.legs*.4);
+        ctx.strokeStyle = 'rgb('+rgb.r+','+rgb.g+','+rgb.b+')';
+        if(i>0){      
+          let px1 = c*p.position.x-s*p.position.y;
+          let py1 = s*p.position.x+c*p.position.y;
+          let px2 = c*p2.position.x-s*p2.position.y;
+          let py2 = s*p2.position.x+c*p2.position.y;
+          let lpx = c*last_point.position.x-s*last_point.position.y;
+          let lpy = s*last_point.position.x+c*last_point.position.y;
+          let dx = px1-lpx;
+          let dy = py1-lpy;
+          let dx2 = px2-lpx;
+          let dy2 = py2-lpy;
+          ctx.moveTo(ppp.x+dx, ppp.y+dy);
+          ctx.lineTo(ppp.x+dx2, ppp.y+dy2);        
+        }      
+        ctx.lineWidth = 3*i/len;
+        ctx.stroke(); 
+      }
+    }
+    
+
+    if (this.anim) {
+      this.ii--;
+      if(this.ii<=0){
+        this.ii=this.particles.length;
+      }
+      //this.particles.push(this.particles[this.ii]);
+        this.particles.splice(this.ii, 1);
+      }    
+  }  
+}
+let mousePos;  
+let lines = [];
+let currentLine;
+let mouseIsPressed=false;
+let color_hue=0;
+function setup() {     
+  canvas = document.querySelector("canvas");
+  ctx = canvas.getContext("2d");
+  resize();
+  window.addEventListener("resize", resize); 
+
+}
+
+function resize() {
+  w = canvas.width;// = 900;
+  h = canvas.height;// = 900;
+  //ctx.translate(w / 2, h / 2);
+   console.log('size: ' + canvas.width + ',' + canvas.height);
+
+}
+
+function getMousePos(canvas, e) {
+  var rect = canvas.getBoundingClientRect();
+  return {
+  x: e.clientX - rect.left,
+  y: e.clientY - rect.top
+  };
+}
+let time_old;
+let show_tip=true;
+function draw(e) {
+  var dt = e-time_old;
+  time_old = e;
+  requestAnimationFrame(draw);
+  ctx.fillStyle='rgb(10,10,10)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  if(show_tip){
+    color_hue+=.001;
+    if(color_hue>1){
+      color_hue=0;
+    }
+  
+    let rgb = HSVtoRGB(color_hue,.7,1);
+    ctx.fillStyle = 'rgb('+rgb.r+','+rgb.g+','+rgb.b+')';
+    // ctx.fillStyle='rgb(155,155,155)';
+    ctx.textAlign = "center";
+    ctx.font = '28px monospace';
+    ctx.fillText('draw', canvas.width/2, canvas.height/2);
+  }
+  if (mouseIsPressed) { 
+    currentLine.addParticle();    
+  }
+  if(lines.length>0){
+    for (let i = 0; i <lines.length; i++) {
+      let l = lines[i];
+      if(l.particles.length==0 && l.anim){
+        lines.splice(i,1);
+      }
+      l.run();      
+    }
+  }
+}
+setup();
+canvas.onmousemove = function(e){
+  mousePos = getMousePos(canvas, e);
+  if(mouseIsPressed){
+    color_hue+=.0001;
+    if(color_hue>1){
+      color_hue=0;
+    }
+  }
+}
+canvas.onmousedown = function(e){
+  mouseIsPressed=true;
+  show_tip=false;
+  // console.log('Mouse position: ' + mousePos.x + ',' + mousePos.y);
+  let l = new ParticleSystem(mousePos);
+  lines.push(l);
+  currentLine=l;  
+}
+canvas.onmouseup = function(e){
+  // console.log('Mouse position: ' + mousePos.x + ',' + mousePos.y);
+  currentLine.anim=true;
+  mouseIsPressed = false;
+}
+
+
+
+draw(1);
+ // ]]>
+  </script>
+</svg>
