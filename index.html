@@ -1,600 +1,597 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sasha T. (tequibo) | Minimal Portfolio</title>
+    <title>Project Viewer</title>
     <style>
-        :root {
-            --text-color: #333;
-            --accent-color: #ff3b30;
-            --background-color: #fff;
-            --border-color: #eaeaea;
-            --hover-alpha: 0.7;
-            --gif-button-color: #4a90e2;
-            --objkt-button-color: #50e3c2;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Courier New', monospace;
         }
 
         body {
-            background-color: var(--background-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            font-size: 1rem;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem;
-            image-rendering: pixelated;
+            overflow: hidden;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a1a;
         }
 
-        .big-header {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            letter-spacing: -1px;
-        }
-
-        .intro {
-            font-size: 1.1rem;
-            margin-bottom: 3rem;
-            color: #666;
-            line-height: 1.5;
-        }
-
-        h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin: 3rem 0 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--text-color);
-        }
-
-        .project-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-        }
-
-        .card {
+        /* Main container - manages layout */
+        .app-container {
             display: flex;
             flex-direction: column;
-            padding: 0;
-            transition: all 0.2s ease;
-            border: 2px solid var(--text-color);
-            background: white;
+            height: 100vh;
+            width: 100vw;
         }
 
-        .card:hover {
-            transform: translate(-4px, -4px);
-            box-shadow: 8px 8px 0 var(--text-color);
-        }
-
-        .project-image {
-            width: 100%;
-            height: 200px;
-            margin-bottom: 0.75rem;
-            transition: opacity 0.2s ease;
-            object-fit: cover;
-            image-rendering: pixelated;
-            border-bottom: 2px solid var(--text-color);
-        }
-
-        .card:hover .project-image {
-            opacity: var(--hover-alpha);
-        }
-
-        .project-info {
-            padding: 0.75rem;
-        }
-
-        .project-title {
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-            font-size: 1.1rem;
-        }
-
-        .project-year {
-            color: #999;
-            font-size: 0.85rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .project-links {
-            margin-top: 0.5rem;
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .link {
-            color: var(--accent-color);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
+        /* Content area (iframe or media) - takes remaining space */
+        .content-area {
+            flex: 1;
             position: relative;
-            display: inline-block;
-            padding: 2px 4px;
-            background: #fff;
-            border: 1px solid var(--accent-color);
+            background: #1a1a1a;
+            overflow: hidden;
         }
 
-        .link:hover {
-            background: var(--accent-color);
-            color: white;
-        }
-
-        .gif-link, .objkt-link {
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-            position: relative;
-            display: inline-block;
-            padding: 2px 4px;
-            background: white;
-            border: 1px solid;
-        }
-
-        .gif-link {
-            color: var(--gif-button-color);
-            border-color: var(--gif-button-color);
-        }
-
-        .objkt-link {
-            color: var(--objkt-button-color);
-            border-color: var(--objkt-button-color);
-        }
-
-        .gif-link:hover {
-            background: var(--gif-button-color);
-            color: white;
-        }
-
-        .objkt-link:hover {
-            background: var(--objkt-button-color);
-            color: white;
-        }
-
-        footer {
-            margin-top: 4rem;
-            padding-top: 2rem;
-            border-top: 2px solid var(--text-color);
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .placeholder {
+        /* Iframe for HTML and SVG files */
+        iframe {
             width: 100%;
-            height: 200px;
-            background-color: #f9f9f9;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        /* Container for non-HTML media */
+        .media-container {
+            width: 100%;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #ccc;
-            margin-bottom: 0.75rem;
-            font-size: 0.9rem;
-            image-rendering: pixelated;
-            border-bottom: 2px solid var(--text-color);
+            background: #1a1a1a;
         }
 
-        .pixel-art {
-            image-rendering: pixelated;
-            image-rendering: -moz-crisp-edges;
-            image-rendering: crisp-edges;
+        .media-container img,
+        .media-container video {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .media-container img {
+            width: auto;
+            height: auto;
+        }
+
+        /* PDF styling */
+        .pdf-viewer {
+            width: 90%;
+            height: 90%;
+            border: none;
+            background: white;
+        }
+
+        /* Toolbar - white rectangle at bottom */
+        .toolbar {
+            background: white;
+            width: 100%;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            min-height: 200px;
+            transition: all 0.3s ease;
+        }
+
+        .toolbar.hidden {
+            display: none;
+        }
+
+        /* Toolbar content layout */
+        .toolbar-content {
+            width: 100%;
+            height: 100%;
+            min-height: 200px;
+            display: flex;
+            align-items: stretch;
+            position: relative;
+        }
+
+        /* Navigation arrows - full height */
+        .nav-arrow {
+            background: none;
+            border: none;
+            font-size: 36px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 80px;
+            height: auto;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            font-family: monospace;
+            color: #333;
+            flex-shrink: 0;
+        }
+
+        .nav-arrow:hover {
+            background: #f0f0f0;
+        }
+
+        /* Left section - title, year, description - aligned to top */
+        .toolbar-left {
+            flex: 1;
+            padding: 25px 0 25px 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            text-align: left;
+        }
+
+        .title-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .toolbar-left h1 {
+            font-size: 22px;
+            color: #333;
+            word-break: break-word;
+        }
+
+        .reload-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background 0.2s;
+            color: #666;
+        }
+
+        .reload-btn:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .toolbar-year {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .toolbar-description {
+            color: #555;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            line-height: 1.6;
+            max-width: 500px;
+        }
+
+        /* Right section - links - aligned to bottom */
+        .toolbar-right {
+            padding: 25px 25px 25px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            text-align: right;
+            flex-shrink: 0;
+            min-width: 160px;
+        }
+
+        /* Links - vertical stack, red, right-aligned */
+        .toolbar-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toolbar-links a {
+            color: red;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .toolbar-links a:hover {
+            text-decoration: underline;
         }
 
         @media (max-width: 768px) {
-            body {
-                padding: 1.25rem;
+            .nav-arrow {
+                width: 60px;
+                font-size: 28px;
             }
-            
-            .big-header {
-                font-size: 2rem;
+            .toolbar-left {
+                padding: 20px 0 20px 20px;
             }
-            
-            .project-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
+            .toolbar-right {
+                padding: 20px 20px 20px 0;
+                min-width: 130px;
             }
-            
-            h2 {
-                margin: 2.5rem 0 1.25rem;
+            .toolbar-left h1 {
+                font-size: 18px;
+            }
+            .reload-btn {
+                font-size: 14px;
+            }
+            .toolbar-description {
+                font-size: 12px;
+            }
+            .toolbar-links a {
+                font-size: 12px;
             }
         }
     </style>
 </head>
-
 <body>
-    <header>
-        <h1 class="big-header">Sasha Tabakov</h1>
-        <div class="intro">
-            Hi, I'm Sasha T. aka tequibo<br>
-            I make interactive art, generative systems, and games.
-        </div>
-    </header>
-
-    <main>
-        <h2>Loops</h2>
-        <div class="project-grid">
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/loop_3x33.gif" alt="3x33 loop">
-                <div class="project-info">
-                    <div class="project-title"></div>
-                    <div class="project-year">2021</div>
-                    <div class="project-links">
-                        <a class="gif-link" href="./assets/loop_3x33.gif" target="_blank">.gif</a>
-                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/1828" target="_blank">blockchain</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/ruby_loop.gif" alt="Ruby loop">
-                <div class="project-info">
-                    <div class="project-title"></div>
-                    <div class="project-year">2021</div>
-                    <div class="project-links">
-                        <a class="gif-link" href="./assets/ruby_loop.gif" target="_blank">.gif</a>
-                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/16655" target="_blank">blockchain</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/lotus.gif" alt="Lotus loop">
-                <div class="project-info">
-                    <div class="project-title"></div>
-                    <div class="project-year">2021</div>
-                    <div class="project-links">
-                        <a class="gif-link" href="./full/lotus.gif" target="_blank">.gif</a>
-                        <!-- <a class="objkt-link" href="https://objkt.com/tokens/versum_items/3024" target="_blank">blockchain</a> -->
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/4x44.gif" alt="Lotus loop">
-                <div class="project-info">
-                    <div class="project-title"></div>
-                    <div class="project-year">2021</div>
-                    <div class="project-links">
-                        <a class="gif-link" href="./full/4x44.gif" target="_blank">.gif</a>
-                        <a class="objkt-link" href="https://objkt.com/tokens/versum_items/3024" target="_blank">blockchain</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <h2>Drawings</h2>
-        <div class="project-grid">
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/flowercrow.gif" alt="Flower crow drawing">
-                <div class="project-info">
-                    <div class="project-title">Flower Crow</div>
-                    <div class="project-year">2021</div>
-                    <div class="project-links">
-                        <a class="gif-link" href="./full/crow_skull.png" target="_blank">.png</a>
-                        <a class="objkt-link" href="https://objkt.com/tokens/versum_items/1694" target="_blank">blockchain</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/moon.gif" alt="Moon drawing">
-                <div class="project-info">
-                    <div class="project-title">Moon</div>
-                    <div class="project-year">2021</div>
-                    <div class="project-links">
-                        <a class="gif-link" href="./full/moon_phone.jpeg" target="_blank">.jpeg</a>
-                        <a class="objkt-link" href="https://objkt.com/tokens/versum_items/812" target="_blank">blockchain</a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/skullthroughspace.gif" alt="Skull through space">
-                <div class="project-info">
-                    <div class="project-title">Skull Through Space</div>
-                    <div class="project-year">2021</div>
-                    <div class="project-links">
-                        <a class="gif-link" href="./full/skull_in_space.png" target="_blank">.png</a>
-                        <a class="objkt-link" href="https://objkt.com/tokens/versum_items/3024" target="_blank">blockchain</a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/death.gif" alt="Death drawing">
-                <div class="project-info">
-                    <div class="project-title">Death</div>
-                    <div class="project-year">2021</div>
-                    <div class="project-links">
-                        <a class="gif-link" href="./full/death.png" target="_blank">.png</a>
-                        <a class="objkt-link" href="https://objkt.com/tokens/versum_items/280" target="_blank">blockchain</a>
-                    </div>
-                </div>
-            </div>
+    <div class="app-container">
+        <div class="content-area" id="contentArea">
+            <!-- Dynamic content goes here -->
         </div>
 
-        <h2>Interactive</h2>
-        <div class="project-grid">
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/begunki.gif" alt="beegoonkee">
-                <div class="project-info">
-                    <div class="project-title">beegoonkee</div>
-                    <div class="project-year">2021</div>
-                    <div class="project-links">
-                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/10633" target="_blank">blockchain</a>
+        <div class="toolbar" id="toolbar">
+            <div class="toolbar-content">
+                <button class="nav-arrow" id="prevBtn">←</button>
+                <div class="toolbar-left">
+                    <div class="title-container">
+                        <h1 id="toolbarTitle"></h1>
+                        <button class="reload-btn" id="reloadBtn" style="display: none;">↻</button>
                     </div>
+                    <div class="toolbar-year" id="toolbarYear"></div>
+                    <div class="toolbar-description" id="toolbarDesc"></div>
                 </div>
-            </div>
-
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/squiggles.gif" alt="squiggles">
-                <div class="project-info">
-                    <div class="project-title">squiggles</div>
-                    <div class="project-year">2021</div>
-                    <div class="project-links">
-                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/10633" target="_blank">blockchain</a>
-                    </div>
+                <div class="toolbar-right">
+                    <div class="toolbar-links" id="toolbarLinks"></div>
                 </div>
-            </div>
-
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/self_obsession.gif" alt="self obsession">
-                <div class="project-info">
-                    <div class="project-title">self obsession</div>
-                    <div class="project-year">2021</div>
-                    <div class="project-links">
-                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/12517" target="_blank">blockchain</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/eternal_spring.gif" alt="eternal_spring">
-                <div class="project-info">
-                    <div class="project-title">eternal_spring</div>
-                    <div class="project-year">2021</div>
-                    <div class="project-links">
-                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/13609" target="_blank">blockchain</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/parts01.gif" alt="parts01">
-                <div class="project-info">
-                    <div class="project-title">parts#0001</div>
-                    <div class="project-year">2021</div>
-                    <div class="project-links">
-                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/150965" target="_blank">blockchain</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/parts02.gif" alt="parts02">
-                <div class="project-info">
-                    <div class="project-title">parts#0002</div>
-                    <div class="project-year">2021</div>
-                    <div class="project-links">
-                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/158131" target="_blank">blockchain</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/parts03.gif" alt="parts03">
-                <div class="project-info">
-                    <div class="project-title">parts#0003</div>
-                    <div class="project-year">2021</div>
-                    <div class="project-links">
-                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/180602" target="_blank">blockchain</a>
-                    </div>
-                </div>
+                <button class="nav-arrow" id="nextBtn">→</button>
             </div>
         </div>
-
-        <h2>Generative Collections</h2>
-        <div class="project-grid">
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/chelovechki.gif" alt="chelovechki">
-                <div class="project-info">
-                    <div class="project-title">chelovechki</div>
-                    <div class="project-year">2022</div>
-                    <div class="project-links">
-                        <a class="link" href="https://www.fxhash.xyz/project/chelovechki" target="_blank">fxhash</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/meta.gif" alt="meta cards">
-                <div class="project-info">
-                    <div class="project-title">meta cards</div>
-                    <div class="project-year">2022</div>
-                    <div class="project-links">
-                        <a class="link" href="https://www.fxhash.xyz/project/meta-cards" target="_blank">fxhash</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/city.gif" alt="city of hope and despair">
-                <div class="project-info">
-                    <div class="project-title">city of hope and despair</div>
-                    <div class="project-year">2022</div>
-                    <div class="project-links">
-                        <a class="link" href="https://www.fxhash.xyz/project/city-of-hope-and-despair" target="_blank">fxhash</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/islands_.gif" alt="islands">
-                <div class="project-info">
-                    <div class="project-title">islands</div>
-                    <div class="project-year">2022</div>
-                    <div class="project-links">
-                        <a class="link" href="https://www.fxhash.xyz/project/islands" target="_blank">fxhash</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/ii.gif" alt="islands ii">
-                <div class="project-info">
-                    <div class="project-title">islands ii</div>
-                    <div class="project-year">2025</div>
-                    <div class="project-links">
-                        <a class="link" href="https://www.fxhash.xyz/project/islands-ii" target="_blank">fxhash</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <h2>Blockchain Art</h2>
-        <div class="project-grid">
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/showdown.gif" alt="SHOWDOWN">
-                <div class="project-info">
-                    <div class="project-title">SHOWDOWN</div>
-                    <div class="project-year">2021</div>
-                    <div class="project-links">
-                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/196844" target="_blank">blockchain</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/adresses.gif" alt="ADDRESSES">
-                <div class="project-info">
-                    <div class="project-title">ADDRESSES</div>
-                    <div class="project-year">2021</div>
-                    <div class="project-links">
-                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/207632" target="_blank">blockchain</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/typeofdance.gif" alt="type_of_dance">
-                <div class="project-info">
-                    <div class="project-title">type_of_dance</div>
-                    <div class="project-year">2024</div>
-                    <div class="project-links">
-                        <a class="objkt-link" href="https://objkt.com/tokens/KT1PCa8pufaSpvdA7ad8tPa69USGnqZDhhPk/2" target="_blank">blockchain</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/typeofplants.gif" alt="type_of_plants">
-                <div class="project-info">
-                    <div class="project-title">type_of_plants</div>
-                    <div class="project-year">2024</div>
-                    <div class="project-links">
-                        <a class="objkt-link" href="https://objkt.com/tokens/KT1PCa8pufaSpvdA7ad8tPa69USGnqZDhhPk/3" target="_blank">blockchain</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/typeofsnake.gif" alt="type_of_snake">
-                <div class="project-info">
-                    <div class="project-title">type_of_snake</div>
-                    <div class="project-year">2024</div>
-                    <div class="project-links">
-                        <a class="objkt-link" href="https://objkt.com/tokens/KT1PCa8pufaSpvdA7ad8tPa69USGnqZDhhPk/7" target="_blank">blockchain</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/typeofinfinity.gif" alt="type_of_infinity">
-                <div class="project-info">
-                    <div class="project-title">type_of_infinity</div>
-                    <div class="project-year">2024</div>
-                    <div class="project-links">
-                        <a class="objkt-link" href="https://objkt.com/tokens/KT1PCa8pufaSpvdA7ad8tPa69USGnqZDhhPk/8" target="_blank">blockchain</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <h2>Neural Networks</h2>
-        <div class="project-grid">
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/doughnots.gif" alt="dough nots">
-                <div class="project-info">
-                    <div class="project-title">dough nots</div>
-                    <div class="project-year">2021</div>
-                        <a class="gif-link" href="./full/doughnots.gif" target="_blank">.gif</a>
-                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/185681" target="_blank">blockchain</a>
-                </div>
-            </div>
-
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/tokblock.gif" alt="tokBLOCK challenge">
-                <div class="project-info">
-                    <div class="project-title">tokBLOCK challenge</div>
-                    <div class="project-year">2021</div>
-                        <a class="gif-link" href="./full/tokblock.mp4" target="_blank">.mp4</a>
-                        <a class="objkt-link" href="https://objkt.com/tokens/hicetnunc/188191" target="_blank">blockchain</a>
-                </div>
-            </div>
-        </div>
-
-        <h2>Games</h2>
-        <div class="project-grid">
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/fs.gif" alt="Fancy Skulls">
-                <div class="project-info">
-                    <div class="project-title">Fancy Skulls</div>
-                    <div class="project-year">2015</div>
-                    <div class="project-links">
-                        <a class="link" href="https://store.steampowered.com/app/307090/" target="_blank">Steam</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <img class="project-image pixel-art" src="./previews/boxlife.gif" alt="Box Life">
-                <div class="project-info">
-                    <div class="project-title">Box Life</div>
-                    <div class="project-year">2013</div>
-                    <div class="project-links">
-                        <a class="link" href="https://gamejolt.com/games/box-life/17952" target="_blank">GameJolt</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <footer>
-        <p>Contact: <a class="link" href="mailto:tequibo@gmail.com">tequibo@gmail.com</a> </p>
-    </footer>
+    </div>
 
     <script>
-        // Add pixelated rendering to all images
-        document.addEventListener('DOMContentLoaded', function() {
-            const images = document.querySelectorAll('img');
-            images.forEach(img => {
-                img.style.imageRendering = 'pixelated';
-                img.style.imageRendering = '-moz-crisp-edges';
-                img.style.imageRendering = 'crisp-edges';
-            });
+        let projects = [];
+        let currentIndex = 0;
+        let toolbarVisible = true;
+        let currentIframe = null;
+
+        // Helper: get filename from path
+        function getFileNameFromPath(path) {
+            return path.split("/").pop();
+        }
+
+        // Helper: get file extension
+        function getFileExtension(path) {
+            return path.split(".").pop().toLowerCase();
+        }
+
+        // Helper: check if file should be loaded in iframe (HTML or SVG)
+        function isIframeFile(path) {
+            const ext = getFileExtension(path);
+            return ["html", "htm", "svg"].includes(ext);
+        }
+
+        // Helper: check if image
+        function isImageFile(path) {
+            const ext = getFileExtension(path);
+            return [
+                "jpg",
+                "jpeg",
+                "png",
+                "gif",
+                "webp",
+                "svg",
+                "bmp",
+                "ico",
+            ].includes(ext);
+        }
+
+        // Helper: check if video
+        function isVideoFile(path) {
+            const ext = getFileExtension(path);
+            return ["mp4", "webm", "ogg", "mov", "avi", "mkv"].includes(ext);
+        }
+
+        // Helper: check if PDF
+        function isPdfFile(path) {
+            return getFileExtension(path) === "pdf";
+        }
+
+        // Reload current iframe
+        function reloadIframe() {
+            if (currentIframe) {
+                const currentSrc = currentIframe.src;
+                currentIframe.src = '';
+                currentIframe.src = currentSrc;
+            }
+        }
+
+        // Load media (non-HTML, non-SVG)
+        function loadMedia(project, container) {
+            const path = project.path;
+            container.innerHTML = "";
+
+            if (isImageFile(path)) {
+                const img = document.createElement("img");
+                img.src = path;
+                img.alt = project.title || getFileNameFromPath(path);
+                img.onerror = () => {
+                    container.innerHTML =
+                        '<div style="color:white;text-align:center;">Failed to load image</div>';
+                };
+                container.appendChild(img);
+            } else if (isVideoFile(path)) {
+                const video = document.createElement("video");
+                video.src = path;
+                video.controls = true;
+                video.autoplay = false;
+                video.loop = false;
+                container.appendChild(video);
+            } else if (isPdfFile(path)) {
+                const pdfEmbed = document.createElement("iframe");
+                pdfEmbed.className = "pdf-viewer";
+                pdfEmbed.src = path;
+                container.appendChild(pdfEmbed);
+            } else {
+                container.innerHTML = `<div style="color:white;text-align:center;">
+                    <p>Cannot display this file type: ${getFileExtension(path)}</p>
+                    <a href="${path}" target="_blank" style="color:#66ccff;">Download or open in new tab</a>
+                </div>`;
+            }
+        }
+
+        // Load HTML or SVG in iframe
+        function loadIframeContent(project, container) {
+            container.innerHTML = "";
+            const iframe = document.createElement("iframe");
+            iframe.src = project.path;
+            currentIframe = iframe;
+
+            // Add permissions for SVG/3D content
+            if (getFileExtension(project.path) === "svg") {
+                iframe.sandbox = "allow-scripts allow-same-origin";
+            }
+
+            container.appendChild(iframe);
+        }
+
+        function updateToolbar(project, index, total) {
+            // Title - use filename if no title
+            let displayTitle = project.title;
+            if (!displayTitle || displayTitle.trim() === "") {
+                displayTitle = getFileNameFromPath(project.path);
+            }
+            document.getElementById("toolbarTitle").textContent =
+                <!-- `${displayTitle} (${index + 1}/${total})`; -->
+                `${displayTitle}`;
+
+            // Show/hide reload button based on 'reload' property
+            const reloadBtn = document.getElementById("reloadBtn");
+            if (project.reload !== undefined && isIframeFile(project.path)) {
+                reloadBtn.style.display = "inline-block";
+            } else {
+                reloadBtn.style.display = "none";
+            }
+
+            // Year
+            const yearDiv = document.getElementById("toolbarYear");
+            if (project.year && project.year.trim() !== "") {
+                yearDiv.textContent = `(${project.year})`;
+                yearDiv.style.display = "block";
+            } else {
+                yearDiv.textContent = "";
+                yearDiv.style.display = "none";
+            }
+
+            // Links (vertical, red, right-aligned)
+            const linksDiv = document.getElementById("toolbarLinks");
+            linksDiv.innerHTML = "";
+
+            // Add blockchain link if exists
+            if (project.blockchain_link) {
+                addLink(linksDiv, "blockchain", project.blockchain_link);
+            }
+
+            // Add shadertoy link if exists
+            if (project.shadertoy_link) {
+                addLink(linksDiv, "shadertoy", project.shadertoy_link);
+            }
+
+            // Add permalink (direct link to current media/iframe)
+            addLink(linksDiv, "link", project.path);
+
+            // Description
+            const descDiv = document.getElementById("toolbarDesc");
+            const description = project.description || "";
+            descDiv.textContent = description;
+        }
+
+        function addLink(container, label, url) {
+            const link = document.createElement("a");
+            link.href = url;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.textContent = label;
+            container.appendChild(link);
+        }
+
+        function loadProject(index) {
+            if (!projects.length || index < 0 || index >= projects.length) return;
+
+            const project = projects[index];
+            currentIndex = index;
+
+            const contentArea = document.getElementById("contentArea");
+
+            // Load content based on file type
+            if (isIframeFile(project.path)) {
+                loadIframeContent(project, contentArea);
+            } else {
+                // Create media container with proper styling
+                contentArea.innerHTML = "";
+                const mediaContainer = document.createElement("div");
+                mediaContainer.className = "media-container";
+                contentArea.appendChild(mediaContainer);
+                loadMedia(project, mediaContainer);
+                currentIframe = null;
+            }
+
+            // Update toolbar with index and total
+            updateToolbar(project, index, projects.length);
+        }
+
+        function nextProject() {
+            if (projects.length === 0) return;
+            const newIndex = (currentIndex + 1) % projects.length;
+            loadProject(newIndex);
+        }
+
+        function prevProject() {
+            if (projects.length === 0) return;
+            const newIndex = (currentIndex - 1 + projects.length) % projects.length;
+            loadProject(newIndex);
+        }
+
+        function toggleToolbar() {
+            toolbarVisible = !toolbarVisible;
+            const toolbar = document.getElementById("toolbar");
+            if (toolbarVisible) {
+                toolbar.classList.remove("hidden");
+            } else {
+                toolbar.classList.add("hidden");
+            }
+            setTimeout(() => {
+                window.dispatchEvent(new Event("resize"));
+            }, 50);
+        }
+
+        function showError(msg) {
+            const contentArea = document.getElementById("contentArea");
+            contentArea.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:white;text-align:center;padding:20px;">${msg}</div>`;
+            document.getElementById("toolbarTitle").textContent = "Error";
+            document.getElementById("toolbarDesc").textContent = msg;
+        }
+
+        // Parse config with quoted description support
+        async function loadConfig() {
+            try {
+                const response = await fetch("projects.txt");
+                const text = await response.text();
+                return parseConfig(text);
+            } catch (err) {
+                console.error("Failed to load projects.txt:", err);
+                showError("Could not load projects.txt file");
+                return [];
+            }
+        }
+
+        function parseConfig(raw) {
+            const lines = raw.split(/\r?\n/);
+            const projects = [];
+            let current = null;
+            let inMultilineDescription = false;
+            let descriptionLines = [];
+
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i];
+                let trimmedLine = line.trim();
+
+                // Skip empty lines outside of description
+                if (trimmedLine === "" && !inMultilineDescription) continue;
+
+                // Start of new project (line starts with /)
+                if (trimmedLine.startsWith("/") && !inMultilineDescription) {
+                    // Save previous project
+                    if (current !== null) {
+                        projects.push(current);
+                    }
+
+                    // Start new project
+                    current = { path: trimmedLine };
+                }
+                // Parse key-value pairs
+                else if (current && line.includes("=") && !inMultilineDescription) {
+                    const eqIndex = line.indexOf("=");
+                    const key = line.substring(0, eqIndex).trim();
+                    let value = line.substring(eqIndex + 1).trim();
+
+                    // Check if value starts with quote (multi-line description)
+                    if (key === "description" && value.startsWith('"')) {
+                        value = value.substring(1);
+                        if (value.endsWith('"')) {
+                            value = value.substring(0, value.length - 1);
+                            current[key] = value;
+                        } else {
+                            inMultilineDescription = true;
+                            descriptionLines = [value];
+                        }
+                    } else {
+                        current[key] = value;
+                    }
+                }
+                // Handle boolean flag (reload)
+                else if (current && trimmedLine === "reload") {
+                    current.reload = true;
+                }
+                // Continue multi-line description
+                else if (current && inMultilineDescription) {
+                    if (trimmedLine.endsWith('"')) {
+                        let lastLine = trimmedLine.substring(0, trimmedLine.length - 1);
+                        descriptionLines.push(lastLine);
+                        current.description = descriptionLines.join("\n").trim();
+                        inMultilineDescription = false;
+                        descriptionLines = [];
+                    } else {
+                        descriptionLines.push(line);
+                    }
+                }
+            }
+
+            if (current !== null) {
+                projects.push(current);
+            }
+
+            return projects;
+        }
+
+        // Keyboard controls
+        window.addEventListener("keydown", (e) => {
+            const key = e.key.toLowerCase();
+            if (key === "h" || key === "arrowleft" || key === "arrowdown") {
+                e.preventDefault();
+                prevProject();
+            } else if (key === "l" || key === "arrowright" || key === "arrowup") {
+                e.preventDefault();
+                nextProject();
+            } else if (key === " ") {
+                e.preventDefault();
+                toggleToolbar();
+            } else if (key === "r" && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                reloadIframe();
+            }
         });
+
+        // Click handlers
+        document.getElementById("prevBtn").addEventListener("click", prevProject);
+        document.getElementById("nextBtn").addEventListener("click", nextProject);
+        document.getElementById("reloadBtn").addEventListener("click", reloadIframe);
+
+        // Initialize
+        async function init() {
+            projects = await loadConfig();
+            if (projects.length > 0) {
+                loadProject(0);
+            } else {
+                showError("No projects found in projects.txt");
+            }
+        }
+
+        init();
     </script>
 </body>
-
 </html>
