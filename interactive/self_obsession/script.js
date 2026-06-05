@@ -233,6 +233,7 @@ class Particle {
         this.h = color_hue;
         let rgb = HSVtoRGB(this.h,1,1);
         this.color = 'rgb('+rgb.r+','+rgb.g+','+rgb.b+')';
+        this.color = current_color;
         this.s=Math.random()*.6+.2
     }
 
@@ -258,6 +259,8 @@ class Particle {
     }
 }
 let TAU = 6.2831853;
+let colors = ["#fc73a3", "#f6de25", "#46f9c7", "#97e578"];
+let current_color;
 // const start = Date.now();
 class ParticleSystem{
   constructor(origin){
@@ -282,11 +285,18 @@ class ParticleSystem{
     this.thic=1;
     this.draw_fr = Math.random()*.009;
     this.dist=0;
+    
   }
 
   addParticle() {
     
     this.currentSegment = new Particle(new Vector(mousePosPrev.x, mousePosPrev.y),new Vector(mousePos.x, mousePos.y), this.origin, this.currentSegment,);
+    
+    this.particles.push(this.currentSegment);
+  }
+
+  addParticleSpecial(prev, current){
+    this.currentSegment = new Particle(prev, current, this.origin, this.currentSegment,);
     
     this.particles.push(this.currentSegment);
   }
@@ -303,6 +313,7 @@ class ParticleSystem{
       ctx.beginPath(); 
       let rgb = HSVtoRGB(p.h,1,.7);
       ctx.strokeStyle = 'rgb('+rgb.r+','+rgb.g+','+rgb.b+')';
+      ctx.strokeStyle = p.color;
       // if(p.parent!=null){     
         ctx.moveTo(p.head_position.x, p.head_position.y);
         ctx.lineTo(p.tail_position.x, p.tail_position.y);        
@@ -366,25 +377,17 @@ class ParticleSystem{
         // head.head_position.x+=(this.start_drawing_point.x+this.particles[this.ii].original_position.x-head.head_position.x)*.5;
         // head.head_position.y+=(this.start_drawing_point.y+this.particles[this.ii].original_position.y-head.head_position.y)*.5;
 
-        ctx2.beginPath(); 
-        let rgb = HSVtoRGB(head.h,this.sat,.8);
-        ctx2.strokeStyle = 'rgb('+rgb.r+','+rgb.g+','+rgb.b+')';
-        ctx2.strokeStyle = 'rgb(255,255,255)';
-        ctx2.moveTo(head.head_position.x, head.head_position.y);
-        ctx2.lineTo(head.head_position.x-this.velocity.x, head.head_position.y-this.velocity.y);
-        ctx2.lineWidth = this.thic;
-        ctx2.stroke();
-
-        // ctx.beginPath(); 
-        // ctx.lineCap = "round";
-        // ctx.arc(head.head_position.x, head.head_position.y, Math.abs(Math.sin(Date.now()*.04)*4)+4, 0, 2 * TAU, false);
-        // let rgb2 = HSVtoRGB(this.h,Math.random(),1);
-        // ctx.strokeStyle = 'rgb('+rgb2.r+','+rgb2.g+','+rgb2.b+')';
-        // ctx.lineWidth = 3;
-
-        // ctx.fillStyle = 'rgb('+rgb.r+','+rgb.g+','+rgb.b+')';
-        // ctx.fill();
-        ctx.stroke();
+        currentLine.addParticleSpecial(new Vector(head.head_position.x, head.head_position.y),
+        new Vector(head.head_position.x-this.velocity.x, head.head_position.y-this.velocity.y));
+        // ctx2.beginPath(); 
+        // let rgb = HSVtoRGB(head.h,this.sat,.8);
+        // ctx2.strokeStyle = 'rgb('+rgb.r+','+rgb.g+','+rgb.b+')';
+        // ctx2.strokeStyle = head.color;
+        // ctx2.moveTo(head.head_position.x, head.head_position.y);
+        // ctx2.lineTo(head.head_position.x-this.velocity.x, head.head_position.y-this.velocity.y);
+        // ctx2.lineWidth = this.thic;
+        // ctx2.stroke();
+        // ctx.stroke();
         
         break;      
       case "finished":
@@ -409,6 +412,13 @@ class ParticleSystem{
         this.start_drawing_point.y = mod_start.y-topBorder+Math.random()*(h-(bottomBorder-mod_start.y)-(mod_start.y-topBorder));
         // console.log(leftBorder);
         this.state="fly";
+        // this.currentLine.state = "fly"
+
+        let l = new ParticleSystem(new Vector(head.head_position.x, head.head_position.y));
+        l.color = this.head.color;
+        // current_color = colors[Math.floor(Math.random()*colors.length)];
+        lines.push(l);
+        this.currentLine=l;  
         break;
     }
      
@@ -508,6 +518,7 @@ canvas.onmousedown = function(e){
     show_tip=false;
     // console.log('Mouse position: ' + mousePos.x + ',' + mousePos.y);
     let l = new ParticleSystem(mousePos);
+    current_color = colors[Math.floor(Math.random()*colors.length)];
     lines.push(l);
     currentLine=l;  
 }

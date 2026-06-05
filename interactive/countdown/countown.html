@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>countdown to</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #0a0a0a;
+    --muted: #9a9a9a;
+    --line: #e8e8e8;
+    --accent: #e10600;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-feature-settings: "tnum" 1, "ss01" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 32px clamp(20px, 5vw, 64px) 0;
+    overflow: hidden;
+  }
+
+  header {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(16px, 3vw, 48px);
+    align-items: center;
+  }
+
+  .picker {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .field label {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .picker input {
+    appearance: none;
+    -webkit-appearance: none;
+    border: none;
+    background: transparent;
+    padding: 6px 4px;
+    font: inherit;
+    font-size: 13px;
+    color: var(--fg);
+    letter-spacing: 0.06em;
+    outline: none;
+    font-variant-numeric: tabular-nums;
+    transition: color 0.4s var(--ease);
+    cursor: text;
+  }
+
+  .picker input#date { width: 7.5em; text-align: left; }
+  .picker input#time { width: 4.5em; text-align: right; }
+  .picker input#date::placeholder { color: transparent; }
+  .picker input#time::placeholder { color: var(--muted); }
+
+  .picker input:hover,
+  .picker input:focus { color: var(--accent); }
+
+  input::-webkit-calendar-picker-indicator {
+    filter: grayscale(1);
+    opacity: 0.5;
+    cursor: pointer;
+    transition: opacity 0.3s var(--ease);
+  }
+  input::-webkit-calendar-picker-indicator:hover { opacity: 1; }
+
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .countdown {
+    display: flex;
+    gap: clamp(16px, 3vw, 48px);
+    align-items: end;
+    margin: clamp(24px, 6vh, 48px);
+    justify-content: center;
+  }
+
+  .unit {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: clamp(16px, 2vw, 24px);
+    min-width: 0;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .unit.hidden {
+    display: none;
+  }
+
+  .value-wrap {
+    position: relative;
+    overflow: hidden;
+    line-height: 0.9;
+  }
+
+  .value {
+    font-size: clamp(56px, 14vw, 200px);
+    font-weight: 300;
+    letter-spacing: -0.04em;
+    line-height: 0.9;
+    font-variant-numeric: tabular-nums;
+    display: flex;
+    gap: 0;
+  }
+
+  .digit {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    height: 1em;
+    min-width: 0.6em;
+    text-align: center;
+  }
+
+  .digit-inner {
+    display: block;
+    transition: transform 0.55s var(--ease);
+    will-change: transform;
+  }
+
+  .digit-inner span {
+    display: block;
+    height: 1em;
+    line-height: 0.9;
+  }
+
+  .unit-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .seconds .value { color: var(--accent); }
+
+  body.expired .seconds .value { color: var(--fg); }
+
+  .stopwatch {
+    padding: clamp(16px, 2vh, 24px) 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-shrink: 0;
+  }
+
+  .stopwatch-wrap {
+    position: relative;
+    display: inline-block;
+  }
+
+  .stopwatch-value {
+    font-size: clamp(32px, 6vw, 64px);
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    transition: color 0.3s var(--ease);
+    user-select: none;
+  }
+
+  .stopwatch-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    cursor: pointer;
+    z-index: 10;
+  }
+
+  .stopwatch-wrap:has(.stopwatch-overlay:hover) .stopwatch-value {
+    color: var(--accent);
+  }
+
+  .note {
+    width: 100%;
+    flex: 1 1 auto;
+    border: none;
+    outline: none;
+    background: var(--bg);
+    color: var(--fg);
+    caret-color: var(--fg);
+    font: inherit;
+    font-size: 24px;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+    resize: none;
+    padding: 0;
+    margin: 0;
+    min-height: 0;
+  }
+
+  .note::placeholder {
+    color: var(--bg);
+    transition: color 0.3s var(--ease);
+  }
+  .note:hover::placeholder,
+  .note:focus::placeholder { color: var(--line); }
+
+  @media (max-width: 640px) {
+    .countdown { grid-template-columns: repeat(2, 1fr); }
+    header { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="picker">
+      <input type="text" id="date" inputmode="numeric" maxlength="10" autocomplete="off" spellcheck="false" />
+      <input type="text" id="time" inputmode="numeric" placeholder="hh:mm" maxlength="5" autocomplete="off" spellcheck="false" />
+    </div>
+  </header>
+
+  <main>
+    <div class="countdown" id="countdown">
+      <div class="unit days">
+        <div class="value-wrap"><div class="value" data-unit="days"></div></div>
+        <div class="unit-label">days</div>
+      </div>
+      <div class="unit hours">
+        <div class="value-wrap"><div class="value" data-unit="hours"></div></div>
+        <div class="unit-label">hours</div>
+      </div>
+      <div class="unit minutes">
+        <div class="value-wrap"><div class="value" data-unit="minutes"></div></div>
+        <div class="unit-label">minutes</div>
+      </div>
+      <div class="unit seconds">
+        <div class="value-wrap"><div class="value" data-unit="seconds"></div></div>
+        <div class="unit-label">seconds</div>
+      </div>
+    </div>
+    <div class="stopwatch" id="stopwatch">
+      <div class="stopwatch-wrap">
+        <div class="stopwatch-value">00:00</div>
+        <div class="stopwatch-overlay" id="stopwatch-overlay"></div>
+      </div>
+    </div>
+    <textarea class="note" id="note" placeholder="note"></textarea>
+  </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const STORAGE_KEY = 'countdown_to:target';
+  const NOTE_KEY = 'countdown_to:note';
+  const MODE_KEY = 'countdown_to:mode';
+  const dateInput = document.getElementById('date');
+  const timeInput = document.getElementById('time');
+  const noteInput = document.getElementById('note');
+
+  try { noteInput.value = localStorage.getItem(NOTE_KEY) || ''; } catch (e) {}
+  noteInput.addEventListener('input', () => {
+    try { localStorage.setItem(NOTE_KEY, noteInput.value); } catch (e) {}
+  });
+
+  // Mode: 'normal' or 'hours-only'
+  let displayMode = 'normal';
+  try { displayMode = localStorage.getItem(MODE_KEY) || 'normal'; } catch (e) {}
+
+  const units = {
+    days:    { el: document.querySelector('[data-unit="days"]'),    pad: 2 },
+    hours:   { el: document.querySelector('[data-unit="hours"]'),   pad: 2 },
+    minutes: { el: document.querySelector('[data-unit="minutes"]'), pad: 2 },
+    seconds: { el: document.querySelector('[data-unit="seconds"]'), pad: 2 },
+  };
+
+  const prev = { days: '', hours: '', minutes: '', seconds: '' };
+
+  function pad(n, size) {
+    const s = Math.max(0, Math.floor(n)).toString();
+    return s.length >= size ? s : '0'.repeat(size - s.length) + s;
+  }
+
+  function dateToParts(date) {
+    const y = date.getFullYear();
+    const m = pad(date.getMonth() + 1, 2);
+    const d = pad(date.getDate(), 2);
+    const hh = pad(date.getHours(), 2);
+    const mm = pad(date.getMinutes(), 2);
+    return { date: `${d}.${m}.${y}`, time: `${hh}:${mm}` };
+  }
+
+  function partsToDate(dateStr, timeStr) {
+    let d, mo, y;
+    if (!dateStr || !dateStr.trim()) {
+      // Empty date means current day
+      const now = new Date();
+      d = now.getDate();
+      mo = now.getMonth() + 1;
+      y = now.getFullYear();
+    } else {
+      const dm = dateStr.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+      if (!dm) return null;
+      d = Number(dm[1]);
+      mo = Number(dm[2]);
+      y = Number(dm[3]);
+    }
+    let h = 0, mi = 0;
+    if (timeStr) {
+      const tm = timeStr.match(/^(\d{1,2}):(\d{2})$/);
+      if (tm) {
+        h = Number(tm[1]);
+        mi = Number(tm[2]);
+      }
+    }
+    if (mo < 1 || mo > 12 || d < 1 || d > 31 || h > 23 || mi > 59) return null;
+    const dt = new Date(y, mo - 1, d, h, mi, 0, 0);
+    return isNaN(dt.getTime()) ? null : dt;
+  }
+
+
+
+  function renderUnit(unitKey, value) {
+    const conf = units[unitKey];
+    const str = pad(value, conf.pad);
+    const oldStr = prev[unitKey];
+
+    if (conf.el.childElementCount !== str.length) {
+      conf.el.innerHTML = '';
+      for (let i = 0; i < str.length; i++) {
+        const d = document.createElement('span');
+        d.className = 'digit';
+        const inner = document.createElement('span');
+        inner.className = 'digit-inner';
+        const a = document.createElement('span');
+        a.textContent = str[i];
+        inner.appendChild(a);
+        d.appendChild(inner);
+        conf.el.appendChild(d);
+      }
+      prev[unitKey] = str;
+      return;
+    }
+
+    for (let i = 0; i < str.length; i++) {
+      const newChar = str[i];
+      const oldChar = oldStr[i];
+      if (newChar === oldChar) continue;
+
+      const digitEl = conf.el.children[i];
+      const inner = digitEl.querySelector('.digit-inner');
+
+      const next = document.createElement('span');
+      next.textContent = newChar;
+      inner.appendChild(next);
+
+      inner.style.transition = 'none';
+      inner.style.transform = 'translateY(0)';
+      void inner.offsetHeight;
+      inner.style.transition = '';
+      inner.style.transform = 'translateY(-1em)';
+
+      const onEnd = () => {
+        inner.removeEventListener('transitionend', onEnd);
+        if (inner.children.length > 1) inner.removeChild(inner.firstChild);
+        inner.style.transition = 'none';
+        inner.style.transform = 'translateY(0)';
+        void inner.offsetHeight;
+        inner.style.transition = '';
+      };
+      inner.addEventListener('transitionend', onEnd);
+    }
+    prev[unitKey] = str;
+  }
+
+  let targetDate = null;
+
+  function tick() {
+    if (!targetDate) return;
+    const now = Date.now();
+    let diff = targetDate.getTime() - now;
+    const expired = diff <= 0;
+    document.body.classList.toggle('expired', expired);
+    if (expired) diff = 0;
+
+    const totalSec = Math.floor(diff / 1000);
+    const days = Math.floor(totalSec / 86400);
+    let hours = Math.floor((totalSec % 86400) / 3600);
+    const minutes = Math.floor((totalSec % 3600) / 60);
+    const seconds = totalSec % 60;
+
+    if (displayMode === 'hours-only') {
+      hours = Math.floor(totalSec / 3600);
+      document.querySelector('.unit.days').classList.add('hidden');
+    } else {
+      document.querySelector('.unit.days').classList.remove('hidden');
+    }
+
+    renderUnit('days', days);
+    renderUnit('hours', hours);
+    renderUnit('minutes', minutes);
+    renderUnit('seconds', seconds);
+  }
+
+
+
+  function setTarget(date, save = true) {
+    targetDate = date;
+    const p = dateToParts(date);
+    dateInput.value = p.date;
+    timeInput.value = p.time;
+    if (save) {
+      try { localStorage.setItem(STORAGE_KEY, date.toISOString()); } catch (e) {}
+    }
+    tick();
+  }
+
+  function handleChange() {
+    // Save raw input values so empty date is preserved across reloads
+    try {
+      localStorage.setItem(STORAGE_KEY + ':date', dateInput.value);
+      localStorage.setItem(STORAGE_KEY + ':time', timeInput.value);
+    } catch (e) {}
+    const d = partsToDate(dateInput.value, timeInput.value);
+    if (d) {
+      targetDate = d;
+      tick();
+    }
+  }
+
+  function init() {
+    let savedDate = null, savedTime = null;
+    try {
+      savedDate = localStorage.getItem(STORAGE_KEY + ':date');
+      savedTime = localStorage.getItem(STORAGE_KEY + ':time');
+    } catch (e) {}
+
+    if (savedDate !== null) {
+      dateInput.value = savedDate;
+      timeInput.value = savedTime || '00:00';
+      const d = partsToDate(savedDate, timeInput.value);
+      if (d) targetDate = d;
+    } else {
+      timeInput.value = '00:00';
+    }
+    tick();
+  }
+
+  dateInput.addEventListener('change', () => {
+    handleChange();
+  });
+
+  dateInput.addEventListener('blur', () => {
+    handleChange();
+  });
+
+  timeInput.addEventListener('change', () => {
+    handleChange();
+  });
+
+  timeInput.addEventListener('blur', () => {
+    if (!timeInput.value.trim()) timeInput.value = '00:00';
+    handleChange();
+  });
+
+  // Toggle display mode on days/hours click
+  document.querySelector('.unit.days').addEventListener('click', () => {
+    displayMode = displayMode === 'normal' ? 'hours-only' : 'normal';
+    try { localStorage.setItem(MODE_KEY, displayMode); } catch (e) {}
+    tick();
+  });
+
+  document.querySelector('.unit.hours').addEventListener('click', () => {
+    displayMode = displayMode === 'normal' ? 'hours-only' : 'normal';
+    try { localStorage.setItem(MODE_KEY, displayMode); } catch (e) {}
+    tick();
+  });
+
+  // Stopwatch functionality
+  let stopwatchState = 'stopped'; // 'stopped', 'running', 'paused'
+  let stopwatchStart = 0;
+  let stopwatchElapsed = 0;
+
+  function formatStopwatch(ms) {
+    const totalSec = Math.floor(ms / 1000);
+    const m = Math.floor(totalSec / 60);
+    const s = totalSec % 60;
+    return `${pad(m, 2)}:${pad(s, 2)}`;
+  }
+
+  function updateStopwatch() {
+    const stopwatchValueEl = document.querySelector('.stopwatch-value');
+    if (stopwatchValueEl && stopwatchState === 'running') {
+      const now = Date.now();
+      const elapsed = stopwatchElapsed + (now - stopwatchStart);
+      stopwatchValueEl.textContent = formatStopwatch(elapsed);
+    }
+  }
+
+  function mainLoop() {
+    tick();
+    updateStopwatch();
+    requestAnimationFrame(mainLoop);
+  }
+
+  init();
+  mainLoop();
+
+  // Setup stopwatch click handler after DOM is ready
+  const stopwatchValueEl = document.querySelector('.stopwatch-value');
+  const stopwatchOverlay = document.getElementById('stopwatch-overlay');
+  if (stopwatchOverlay && stopwatchValueEl) {
+    stopwatchOverlay.addEventListener('click', () => {
+      if (stopwatchState === 'stopped') {
+        stopwatchState = 'running';
+        stopwatchStart = Date.now();
+      } else if (stopwatchState === 'running') {
+        stopwatchState = 'paused';
+        stopwatchElapsed += Date.now() - stopwatchStart;
+        stopwatchValueEl.textContent = formatStopwatch(stopwatchElapsed);
+      } else if (stopwatchState === 'paused') {
+        stopwatchState = 'stopped';
+        stopwatchElapsed = 0;
+        stopwatchValueEl.textContent = '00:00';
+      }
+    });
+  }
+});
+</script>
+</body>
+</html>
